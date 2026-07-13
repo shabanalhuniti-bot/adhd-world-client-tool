@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADHD World — لوحة نتائج العميل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --navy:#1a1a2e; --navy-mid:#3d3d55; --navy-light:#5a5a6e; --navy-pale:#c7c7d6;
+    --green:#a8d8b9; --green-deep:#284635; --green-tint:#EAF5EE;
+    --gold:#FFB627; --gold-deep:#B8791E;
+    --cream:#F7F4EE; --line:#e5e2dc; --white:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Cairo','Poppins',sans-serif; background:var(--cream); color:var(--navy); direction:rtl;}
+  .wrap{max-width:820px; margin:0 auto; padding:32px 20px 80px;}
+
+  .topbar{display:flex; align-items:center; gap:12px; margin-bottom:24px;}
+  .topbar .mark{width:34px; height:24px; flex-shrink:0;}
+  .topbar .brandname{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--navy-light); font-weight:600;}
+  .topbar h1{font-size:20px; font-weight:800; margin-top:2px;}
+
+  .lookup{
+    background:var(--white); border:1.5px solid var(--line); border-radius:16px;
+    padding:18px 20px; margin-bottom:24px; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;
+  }
+  .lookup .field{flex:1; min-width:220px;}
+  .lookup label{display:block; font-size:12px; color:var(--navy-light); margin-bottom:5px; font-weight:600;}
+  .lookup input{
+    width:100%; padding:11px 14px; border:1.5px solid var(--line); border-radius:10px;
+    font-size:14px; font-family:inherit; color:var(--navy);
+  }
+  .lookup input:focus{outline:none; border-color:var(--green);}
+  .lookup button{
+    background:var(--gold); color:var(--navy); border:none; border-radius:100px;
+    padding:12px 24px; font-weight:700; font-size:14px; cursor:pointer; font-family:inherit;
+  }
+  .lookup button:disabled{background:var(--navy-pale); cursor:not-allowed;}
+
+  .state-msg{font-size:13px; color:var(--navy-light); margin-bottom:20px; display:none;}
+  .state-msg.error{color:#b3411f;}
+
+  .card{background:var(--white); border:1.5px solid var(--line); border-radius:20px; padding:24px; margin-bottom:18px;}
+  .client-card{background:var(--navy); color:var(--cream); border:none;}
+  .client-card .name{font-size:19px; font-weight:800;}
+  .client-card .meta{font-size:12.5px; color:var(--navy-pale); margin-top:6px; line-height:1.8;}
+  .client-card .meta b{color:var(--green);}
+  .disclaimer-strip{
+    background:rgba(255,182,39,0.1); border:1px solid rgba(255,182,39,0.25); border-radius:12px;
+    padding:12px 16px; font-size:12.5px; color:var(--navy-mid); margin-bottom:18px; line-height:1.7;
+  }
+  .disclaimer-strip strong{color:var(--gold-deep);}
+
+  .section-label{
+    font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--green-deep);
+    background:var(--green-tint); display:inline-block; padding:4px 12px; border-radius:100px; margin-bottom:10px;
+  }
+  .section-title{font-size:17px; font-weight:800; margin-bottom:4px;}
+  .section-sub{font-size:12.5px; color:var(--navy-light); margin-bottom:16px; line-height:1.7;}
+
+  .stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:6px;}
+  .stat-box{flex:1; min-width:140px; background:var(--cream); border-radius:14px; padding:14px 16px; text-align:center;}
+  .stat-box .num{font-size:26px; font-weight:800; color:var(--navy);}
+  .stat-box .lbl{font-size:11.5px; color:var(--navy-light); margin-top:2px;}
+  .stat-note{font-size:12.5px; color:var(--navy-mid); line-height:1.8; margin-top:12px; background:var(--cream); border-radius:12px; padding:12px 14px;}
+
+  .domain-row{margin-bottom:14px;}
+  .domain-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;}
+  .domain-name{font-size:13.5px; font-weight:700;}
+  .domain-band{font-size:11.5px; font-weight:700; padding:2px 10px; border-radius:100px;}
+  .band-strength{background:var(--green-tint); color:var(--green-deep);}
+  .band-good{background:#EAF2FB; color:#2456A6;}
+  .band-growth{background:#FDF1E0; color:var(--gold-deep);}
+  .band-priority{background:#FBEAE6; color:#B3411F;}
+  .domain-track{height:8px; background:var(--line); border-radius:6px; overflow:hidden;}
+  .domain-fill{height:100%; border-radius:6px;}
+
+  .strength-item{border-bottom:1px solid var(--line); padding:12px 0;}
+  .strength-item:last-child{border-bottom:none;}
+  .strength-q{font-size:12.5px; color:var(--navy-light); margin-bottom:4px; font-weight:600;}
+  .strength-a{font-size:14px; color:var(--navy); line-height:1.7;}
+  .strength-a.empty{color:var(--navy-pale); font-style:italic;}
+
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <svg class="mark" viewBox="-10 0 170 110">
+      <path d="M12,50 C -4,42 -2,14 20,16 C 44,18 42,48 20,48 C 4,48 4,66 24,64 C 48,62 30,28 54,28 C 70,28 70,46 54,48 C 46,49 50,58 62,52 C 82,42 90,54 110,42 C 128,32 138,55 150,40" fill="none" stroke="#1a1a2e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="150" cy="40" r="7" fill="#FFB627"/>
+    </svg>
+    <div>
+      <div class="brandname">ADHD World</div>
+      <h1>لوحة نتائج العميل</h1>
+    </div>
+  </div>
+
+  <div class="lookup">
+    <div class="field">
+      <label>البريد الإلكتروني للعميل</label>
+      <input type="email" id="lookupEmail" placeholder="client@email.com">
+    </div>
+    <button id="loadBtn" onclick="loadResults()">تحميل النتائج</button>
+  </div>
+
+  <div class="state-msg" id="stateMsg"></div>
+
+  <div id="results" class="hidden">
+
+    <div class="card client-card">
+      <div class="name" id="rClientName"></div>
+      <div class="meta" id="rClientMeta"></div>
+    </div>
+
+    <div class="disclaimer-strip">
+      <strong>تذكير: </strong>هذه النتائج ليست تشخيصًا رسميًا. الهدف منها فهم أسلوب تفكير العميل وتحدياته لتصميم جلسات تدريب مناسبة — وليس تصنيفه أو الحكم عليه.
+    </div>
+
+    <div class="card hidden" id="dsmCard">
+      <div class="section-label">فحص أولي</div>
+      <div class="section-title">مقياس قصور الانتباه / فرط النشاط (DSM-IV)</div>
+      <div class="section-sub">فحص أولي غير تشخيصي — يساعد على تحديد ما إذا كانت أنماط ADHD مناسبة كإطار للجلسات.</div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num" id="dsmInattention">-</div><div class="lbl">قصور الانتباه (من ٩)</div></div>
+        <div class="stat-box"><div class="num" id="dsmHyperactivity">-</div><div class="lbl">فرط النشاط (من ٩)</div></div>
+      </div>
+      <div class="stat-note" id="dsmNote"></div>
+    </div>
+
+    <div class="card hidden" id="haCard">
+      <div class="section-label">فحص أولي</div>
+      <div class="section-title">اختبار فرط الإثارة العاطفية</div>
+      <div class="section-sub">يقيس شدة الاستجابة العاطفية والحساسية تجاه الرفض والنقد.</div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num" id="haCount">-</div><div class="lbl">من ١٧ سؤال</div></div>
+      </div>
+      <div class="stat-note" id="haNote"></div>
+    </div>
+
+    <div class="card hidden" id="efCard">
+      <div class="section-label">الوظائف التنفيذية</div>
+      <div class="section-title">نقاط القوة ومجالات النمو</div>
+      <div class="section-sub">كل مجال أدناه نقطة انطلاق لمحادثة التدريب — ليس حكمًا نهائيًا.</div>
+      <div id="efDomains"></div>
+    </div>
+
+    <div class="card hidden" id="strengthsCard">
+      <div class="section-label">تأمل ذاتي</div>
+      <div class="section-title">من أنت؟ وما هي نقاط قوتك؟</div>
+      <div class="section-sub">إجابات مفتوحة تعطي سياقًا شخصيًا مفيدًا للمدرب.</div>
+      <div id="strengthsList"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdv6TJnqpfkf94zeY3MIePkCyaaTcbmmxSSh9_MWAfMduEt7dfvMZB4nfMDINtWaCVvA/exec";
+
+const EF_DOMAIN_LABELS_AR = {
+  "self_control":"ضبط رد الفعل / التحكم في الذات",
+  "working_memory":"الذاكرة العاملة",
+  "emotion_regulation":"إدارة الانفعال",
+  "task_initiation":"التنشيط / البدء بالمهام",
+  "sustained_attention":"تركيز الانتباه",
+  "planning_prioritizing":"التخطيط / وضع الأولويات",
+  "organization":"التنظيم",
+  "time_management":"إدارة الوقت",
+  "flexibility":"المرونة",
+  "metacognition":"ما وراء المعرفة",
+  "goal_persistence":"المثابرة لتحقيق الأهداف",
+  "stress_tolerance":"تحمل القلق / الإجهاد"
+};
+const EF_DOMAIN_ORDER = ["self_control","working_memory","emotion_regulation","task_initiation","sustained_attention","planning_prioritizing","organization","time_management","flexibility","metacognition","goal_persistence","stress_tolerance"];
+
+const STRENGTHS_QUESTIONS = [
+  {id:"str_1", self:"ما هي الموهبة التي تتمتع بها؟", child:"ما هي الموهبة التي يتمتع بها طفلك؟"},
+  {id:"str_2", self:"ما هي السمات الشخصية التي تعد من نقاط قوتك؟", child:"ما هي السمات الشخصية التي تعد من نقاط قوة طفلك؟"},
+  {id:"str_3", self:"ما هي المهارات/المجالات التي تبدع بها؟", child:"ما هي المهارات/المجالات التي يبدع بها طفلك؟"},
+  {id:"str_4", self:"كيف تقضي أوقات فراغك؟", child:"كيف يقضي طفلك أوقات فراغه؟"},
+  {id:"str_5", self:"كيف تتعلم أفضل؟", child:"كيف يتعلم طفلك بشكل أفضل؟"},
+  {id:"str_6", self:"ما هو أسلوب تعلمك المفضل؟", child:"ما هو أسلوب التعلم المفضل لدى طفلك؟"},
+  {id:"str_7", self:"ما هو المكان المفضل لديك للدراسة؟", child:"ما هو المكان المفضل لدى طفلك للدراسة؟"},
+  {id:"str_8", self:"ما هو النشاط المفضل لديك في الصف؟", child:"ما هو النشاط المفضل لدى طفلك في الصف؟"},
+  {id:"str_9", self:"هل يتوافق التخصص الذي اخترته مع نقاط قوتك/ضعفك؟", child:"هل تلاحظ توافقًا بين اهتمامات طفلك ونقاط قوته/ضعفه؟"}
+];
+
+function efBand(score){
+  if(score <= 8) return {label:"أولوية للتطوير في الجلسات", cls:"band-priority", fill:"#B3411F"};
+  if(score <= 11) return {label:"مجال للنمو", cls:"band-growth", fill:"#FFB627"};
+  if(score <= 14) return {label:"قوة جيدة، قد تتأثر بالضغط", cls:"band-good", fill:"#2456A6"};
+  return {label:"نقطة قوة راسخة", cls:"band-strength", fill:"#284635"};
+}
+
+function setState(msg, isError){
+  const el = document.getElementById("stateMsg");
+  el.textContent = msg;
+  el.style.display = msg ? "block" : "none";
+  el.classList.toggle("error", !!isError);
+}
+
+function loadResults(){
+  const email = document.getElementById("lookupEmail").value.trim();
+  if(!email){ setState("فضلاً أدخل بريد العميل الإلكتروني.", true); return; }
+
+  const btn = document.getElementById("loadBtn");
+  btn.disabled = true;
+  btn.textContent = "جارٍ التحميل...";
+  setState("");
+  document.getElementById("results").classList.add("hidden");
+
+  fetch(APPS_SCRIPT_URL + "?email=" + encodeURIComponent(email))
+    .then(r => r.json())
+    .then(res => {
+      btn.disabled = false;
+      btn.textContent = "تحميل النتائج";
+      if(res.status !== "ok"){
+        setState("لم يتم العثور على عميل بهذا البريد الإلكتروني.", true);
+        return;
+      }
+      renderResults(res.data);
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = "تحميل النتائج";
+      setState("حدث خطأ أثناء التحميل. تأكد من رابط الـ Apps Script وحاول مرة أخرى.", true);
+    });
+}
+
+function renderResults(row){
+  const rawField = row["Raw Answers + Scores (JSON)"] || "";
+  let parsed = {};
+  try { parsed = rawField ? JSON.parse(rawField) : {}; } catch(e) { parsed = {}; }
+  const rawAnswers = parsed.rawAnswers || {};
+  const scored = parsed.scored || {};
+
+  document.getElementById("rClientName").textContent = row["Full Name"] || "—";
+  const filledBy = row["Filled By"] || "Self";
+  const isChild = filledBy.indexOf("Parent") === 0 || filledBy.indexOf("child") !== -1;
+  const metaLines = [];
+  metaLines.push("البريد: " + (row["Email"] || "—"));
+  if(isChild && row["Child Name"]) metaLines.push("<b>تمت التعبئة بواسطة ولي الأمر</b> عن الطفل: " + row["Child Name"]);
+  metaLines.push("التشخيص السابق: " + (row["Diagnosis Status"] || "—"));
+  metaLines.push("الحالة: " + (row["Status"] || "—"));
+  document.getElementById("rClientMeta").innerHTML = metaLines.join(" · ");
+
+  // DSM-IV
+  if(scored.dsm){
+    document.getElementById("dsmCard").classList.remove("hidden");
+    document.getElementById("dsmInattention").textContent = scored.dsm.inattention + "/9";
+    document.getElementById("dsmHyperactivity").textContent = scored.dsm.hyperactivity + "/9";
+    const total = scored.dsm.inattention + scored.dsm.hyperactivity;
+    let note;
+    if(total <= 4) note = "عدد العلامات الظاهرة محدود. يمكن أن تكون الجلسات مركزة على أهداف عامة بدل التركيز حصرًا على أنماط ADHD.";
+    else if(total <= 10) note = "هناك عدد ملحوظ من العلامات المرتبطة بـADHD تستحق أن تكون جزءًا من محادثة الأهداف في جلسة الاستقبال.";
+    else note = "عدد كبير من العلامات ظاهر عبر المقياسين. يستحسن مناقشة هذا بوضوح مع العميل، مع التذكير بأن الفحص وحده لا يشخّص.";
+    document.getElementById("dsmNote").textContent = note;
+  }
+
+  // Hyperarousal
+  if(scored.hyperarousal){
+    document.getElementById("haCard").classList.remove("hidden");
+    document.getElementById("haCount").textContent = scored.hyperarousal.yes + "/" + scored.hyperarousal.total;
+    const y = scored.hyperarousal.yes;
+    let note;
+    if(y <= 5) note = "مستوى منخفض نسبيًا من فرط الإثارة العاطفية.";
+    else if(y <= 11) note = "مستوى متوسط — إدارة الانفعال قد تكون محورًا مفيدًا في بعض الجلسات.";
+    else note = "مستوى مرتفع — إدارة الانفعال والحساسية تجاه الرفض تستحق أن تكون محورًا أساسيًا في خطة التدريب.";
+    document.getElementById("haNote").textContent = note;
+  }
+
+  // Executive Function
+  if(scored.ef){
+    document.getElementById("efCard").classList.remove("hidden");
+    const container = document.getElementById("efDomains");
+    container.innerHTML = "";
+    EF_DOMAIN_ORDER.forEach(d => {
+      const entry = scored.ef[d];
+      if(!entry) return;
+      const band = efBand(entry.score);
+      const pct = Math.round((entry.score / 18) * 100);
+      const row = document.createElement("div");
+      row.className = "domain-row";
+      row.innerHTML =
+        '<div class="domain-top">' +
+          '<span class="domain-name">' + EF_DOMAIN_LABELS_AR[d] + '</span>' +
+          '<span class="domain-band ' + band.cls + '">' + band.label + ' · ' + entry.score + '/18</span>' +
+        '</div>' +
+        '<div class="domain-track"><div class="domain-fill" style="width:' + pct + '%; background:' + band.fill + ';"></div></div>';
+      container.appendChild(row);
+    });
+  }
+
+  // Strengths
+  const hasStrengths = STRENGTHS_QUESTIONS.some(q => rawAnswers[q.id] !== undefined);
+  if(hasStrengths){
+    document.getElementById("strengthsCard").classList.remove("hidden");
+    const list = document.getElementById("strengthsList");
+    list.innerHTML = "";
+    STRENGTHS_QUESTIONS.forEach(q => {
+      const answer = rawAnswers[q.id];
+      const item = document.createElement("div");
+      item.className = "strength-item";
+      const qText = isChild ? q.child : q.self;
+      item.innerHTML =
+        '<div class="strength-q">' + qText + '</div>' +
+        '<div class="strength-a' + (answer ? '' : ' empty') + '">' + (answer || 'لم تتم الإجابة') + '</div>';
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById("results").classList.remove("hidden");
+}
+</script>
+</body>
+</html>
