@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADHD World — الخطوة التالية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --navy:#1a1a2e;
+    --navy-soft:#3d3d55;
+    --muted:#5a5a6e;
+    --line:#e5e0d5;
+    --line-strong:#c7c7d6;
+    --cream:#F7F4EE;
+    --green:#a8d8b9;
+    --green-deep:#284635;
+    --green-tint:#EAF5EE;
+    --gold:#FFB627;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Cairo', 'Poppins', sans-serif;
+    background:var(--cream);
+    color:var(--navy);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:32px 16px 80px;
+  }
+  html[lang="en"] body{ font-family:'Poppins', 'Cairo', sans-serif; }
+  .lang-toggle{
+    position:fixed; top:16px; left:16px;
+    background:#fff; border:1px solid var(--line); border-radius:100px;
+    padding:6px 14px; font-size:13px; cursor:pointer; color:var(--navy); z-index:10; font-weight:600;
+  }
+  .wrap{width:100%; max-width:620px;}
+  .brand{text-align:center; margin-bottom:20px;}
+  .brand .name{font-size:15px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; font-weight:600;}
+  .brand h1{font-family:'Cairo',sans-serif; font-weight:800; font-size:24px; margin:8px 0 0; color:var(--navy);}
+
+  .progress{display:flex; gap:6px; margin-bottom:10px;}
+  .progress .seg{flex:1; height:4px; border-radius:4px; background:var(--line);}
+  .progress .seg.done{background:var(--green);}
+
+  .overall-track{
+    height:8px; background:var(--line); border-radius:6px; overflow:hidden; margin-bottom:22px;
+  }
+  .overall-fill{
+    height:100%; background:var(--green); border-radius:6px;
+    transition:width .5s ease;
+  }
+  .overall-meta{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin:-14px 0 20px;}
+
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:20px;
+    padding:30px 26px; box-shadow:0 1px 3px rgba(26,26,46,.08);
+  }
+  .step-label{font-size:13px; color:var(--green-deep); font-weight:700; margin-bottom:6px;}
+  h2{font-family:'Cairo',sans-serif; font-weight:800; font-size:19px; margin:0 0 14px; color:var(--navy);}
+  html[lang="en"] h2{ font-family:'Poppins',sans-serif; font-weight:700; }
+  p{line-height:1.8; color:var(--navy-soft);}
+
+  .choice-row{display:flex; gap:12px; margin-top:20px;}
+  .choice-btn{
+    flex:1; padding:16px; border:1.5px solid var(--line); border-radius:14px;
+    background:#fff; font-size:15px; cursor:pointer; transition:.15s; color:var(--navy); font-family:inherit;
+  }
+  .choice-btn:hover{border-color:var(--green);}
+  .choice-btn.selected{border-color:var(--green); background:var(--green-tint); color:var(--green-deep); font-weight:700;}
+
+  .disclaimer{
+    background:var(--cream); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; font-size:13.5px; color:var(--navy-soft); margin:16px 0; line-height:1.7;
+  }
+  .disclaimer strong{ color:#B8791E; } /* darker gold shade for AA text contrast, same hue family as accent gold */
+  label.check{display:flex; gap:10px; align-items:flex-start; margin:16px 0; font-size:14.5px; cursor:pointer;}
+  label.check input{margin-top:3px;}
+  input[type=text], input[type=email], textarea{
+    width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px;
+    font-size:15px; margin-top:6px; font-family:inherit; color:var(--navy);
+  }
+  input:focus, textarea:focus{ outline:none; border-color:var(--green); }
+  textarea{min-height:64px; resize:vertical;}
+  .field{margin-bottom:16px;}
+  .field .lbl{font-size:13px; color:var(--muted); margin-bottom:4px; display:block;}
+  .autofill-note{font-size:12px; color:var(--green-deep); margin-top:-10px; margin-bottom:14px;}
+
+  .tool-header{margin-bottom:14px;}
+  .tool-header .tool-progress{font-size:12px; color:var(--green-deep); font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-bottom:6px;}
+  .tool-header h2{margin-bottom:4px;}
+  .tool-header .tool-sub{font-size:13px; color:var(--muted);}
+
+  .scale-legend{font-size:12px; color:var(--muted); margin:10px 0 16px; line-height:1.7; background:var(--cream); border-radius:10px; padding:10px 12px; display:flex; flex-wrap:wrap; gap:4px 14px;}
+  .scale-legend .scale-item strong{color:var(--navy);}
+
+  .q-block{border-bottom:1px solid var(--line); padding:16px 0;}
+  .q-block:last-child{border-bottom:none;}
+  .q-title{font-size:14.5px; margin-bottom:10px; line-height:1.6; color:var(--navy);}
+  .likert{display:flex; gap:6px; flex-wrap:wrap;}
+  .likert button{
+    flex:1; min-width:40px; padding:9px 4px; border:1.5px solid var(--line); border-radius:10px;
+    background:#fff; font-size:13px; cursor:pointer; color:var(--navy); font-family:inherit;
+  }
+  .likert button.sel{background:var(--navy); border-color:var(--navy); color:#fff; font-weight:700;}
+  .yesno{display:flex; gap:10px;}
+  .yesno button{
+    flex:1; padding:10px; border:1.5px solid var(--line); border-radius:10px; background:#fff;
+    font-size:14px; cursor:pointer; color:var(--navy); font-family:inherit;
+  }
+  .yesno button.sel{background:var(--navy); border-color:var(--navy); color:#fff; font-weight:700;}
+
+  .nav-row{display:flex; justify-content:space-between; margin-top:26px; gap:12px;}
+  .btn{
+    padding:13px 26px; border-radius:100px; border:none; font-size:15px; cursor:pointer; font-weight:700;
+    font-family:inherit;
+  }
+  .btn-primary{background:var(--gold); color:var(--navy);}
+  .btn-primary:disabled{background:var(--line-strong); color:#fff; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--muted); border:1.5px solid var(--line);}
+
+  .done-screen{text-align:center; padding:20px 0;}
+  .done-screen .icon{font-size:44px; margin-bottom:10px;}
+  .hidden{display:none !important;}
+  .unanswered-note{font-size:12.5px; color:#B8791E; margin-top:10px; display:none;}
+
+  /* Milestone / reward screen */
+  .milestone{text-align:center; padding:10px 0;}
+  .milestone .badge{
+    font-size:52px; margin-bottom:14px; animation:pop .35s ease;
+  }
+  @keyframes pop{ 0%{transform:scale(.4); opacity:0;} 70%{transform:scale(1.08);} 100%{transform:scale(1); opacity:1;} }
+  .milestone h2{margin-bottom:8px;}
+  .milestone .msg{color:var(--muted); font-size:14.5px; margin-bottom:22px;}
+  .milestone-bar-track{
+    height:10px; background:var(--line); border-radius:8px; overflow:hidden; max-width:280px; margin:0 auto 8px;
+  }
+  .milestone-bar-fill{
+    height:100%; background:var(--green); border-radius:8px; transition:width .6s ease;
+  }
+  .milestone-percent{font-size:13px; color:var(--green-deep); font-weight:700; margin-bottom:22px;}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle" onclick="toggleLang()" id="langToggle">English</div>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="name">ADHD World</div>
+    <h1 id="brandTitle" data-t="brandTitle">قبل جلستك الأولى</h1>
+  </div>
+
+
+  <div class="progress" id="progressBar">
+    <div class="seg" data-step="0"></div>
+    <div class="seg" data-step="1"></div>
+    <div class="seg" data-step="2"></div>
+    <div class="seg" data-step="3"></div>
+  </div>
+  <div class="overall-track hidden" id="overallTrack"><div class="overall-fill" id="overallFill" style="width:0%"></div></div>
+
+  <div class="card">
+
+    <!-- STEP 0: Who is this assessment for? -->
+    <div id="step0">
+      <h2 data-t="perspectiveTitle">لمن هذا التقييم؟</h2>
+      <p data-t="perspectiveSub">هذا يساعدنا على استخدام الأسئلة المناسبة.</p>
+      <div class="choice-row">
+        <button class="choice-btn" onclick="selectPerspective('self')" id="btnSelf" data-t="perspectiveSelf">لنفسي</button>
+        <button class="choice-btn" onclick="selectPerspective('child')" id="btnChild" data-t="perspectiveChild">لطفلي</button>
+      </div>
+      <div class="nav-row">
+        <div></div>
+        <button class="btn btn-primary" id="step0Next" disabled onclick="goToStep(1)" data-t="next">التالي</button>
+      </div>
+    </div>
+
+    <!-- STEP 1: Diagnosis question -->
+    <div id="step1" class="hidden">
+      <h2 id="q1title">هل تم تشخيصك سابقًا بفرط الحركة وتشتت الانتباه (ADHD)؟</h2>
+      <p id="q1sub">هذا يساعدنا على تجهيز التقييم المناسب لك.</p>
+      <div class="choice-row">
+        <button class="choice-btn" onclick="selectDiagnosis(true)" id="btnYes" data-t="yes">نعم</button>
+        <button class="choice-btn" onclick="selectDiagnosis(false)" id="btnNo" data-t="no">لا</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goToStep(0)" data-t="back">رجوع</button>
+        <button class="btn btn-primary" id="step1Next" disabled onclick="goToStep(2)" data-t="next">التالي</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Contract + disclaimer -->
+    <div id="step2" class="hidden">
+      <div class="step-label" data-t="stepLabel2">الخطوة ٢ من ٣</div>
+      <h2 data-t="contractTitle">الموافقة على الشروط</h2>
+
+      <div class="disclaimer">
+        <strong data-t="disclaimerBold">تنويه مهم: </strong>
+        <span id="disclaimerTextEl">التقييمات المستخدمة هنا ليست أداة تشخيص طبي أو نفسي رسمية. الغرض منها هو مساعدتنا على فهم طريقة تفكيرك وتحدياتك بشكل أفضل، لكي نستطيع تصميم جلسات التدريب المناسبة لك. لأي تشخيص رسمي، يرجى مراجعة مختص مرخّص.</span>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="agreeCheck" onchange="checkContractReady()">
+        <span id="agreeTextEl">أوافق على الشروط، وأفهم أن هذا التقييم ليس تشخيصًا رسميًا، وإنما لمساعدتنا على فهم كيفية العمل معي بشكل أفضل.</span>
+      </label>
+
+      <div class="field">
+        <span class="lbl" id="fullNameLblEl" data-t="fullNameLbl">الاسم الكامل (كتوقيع إلكتروني)</span>
+        <input type="text" id="fullName" oninput="checkContractReady()">
+      </div>
+      <div class="field">
+        <span class="lbl" data-t="emailLbl">البريد الإلكتروني</span>
+        <input type="email" id="clientEmail" oninput="checkContractReady()">
+      </div>
+      <div class="field hidden" id="childNameField">
+        <span class="lbl" data-t="childNameLbl">اسم الطفل</span>
+        <input type="text" id="childName" oninput="checkContractReady()">
+      </div>
+      <div class="autofill-note hidden" id="autofillNote" data-t="autofillNote">تم تعبئة بياناتك تلقائيًا من حجزك — يمكنك تعديلها إذا أردت.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goToStep(1)" data-t="back">رجوع</button>
+        <button class="btn btn-primary" id="step2Next" disabled onclick="startAssessments()" data-t="next">التالي</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Assessments (one chunk of one tool at a time) -->
+    <div id="step3" class="hidden">
+      <div class="tool-header">
+        <div class="tool-progress" id="toolProgress"></div>
+        <h2 id="chunkTitle"></h2>
+        <div class="tool-sub" id="toolSub"></div>
+      </div>
+      <div class="scale-legend" id="scaleLegend"></div>
+      <div id="questionContainer"></div>
+      <div class="unanswered-note" id="unansweredNote" data-t="unansweredNote">فضلاً أجب على جميع الأسئلة قبل المتابعة.</div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="prevChunk()" data-t="back">رجوع</button>
+        <button class="btn btn-primary" id="toolNextBtn" onclick="onChunkNext()" data-t="next">التالي</button>
+      </div>
+    </div>
+
+    <!-- MILESTONE / REWARD SCREEN -->
+    <div id="stepMilestone" class="hidden milestone">
+      <div class="badge" id="milestoneBadge">🎉</div>
+      <h2 id="milestoneTitle"></h2>
+      <div class="msg" id="milestoneMsg"></div>
+      <div class="milestone-bar-track"><div class="milestone-bar-fill" id="milestoneBarFill" style="width:0%"></div></div>
+      <div class="milestone-percent" id="milestonePercent">0%</div>
+      <div class="nav-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="milestoneContinueBtn" onclick="advanceAfterMilestone()" data-t="next">التالي</button>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div id="stepDone" class="hidden done-screen">
+      <div class="icon">✅</div>
+      <h2 data-t="doneTitle">تم بنجاح!</h2>
+      <p data-t="doneText">شكرًا لك. تم استلام إجاباتك وسنكون جاهزين لمناقشتها في جلسة الاستقبال (Intake) القادمة.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ================== CONFIG ================== */
+const APPS_SCRIPT_URL = "PASTE_APPS_SCRIPT_URL_HERE";
+
+/* ================== RAW ASSESSMENT DATA (transcribed from Screening_Tools_-_ADHD_EF_EI.pdf) ================== */
+const DSM_QUESTIONS = [{"id": "dsm_in_1", "domain": "inattention", "ar_self": "لا أركز على التفاصيل الصغيرة، وأرتكب أخطاء كثيرة بسببها.", "ar_child": "طفلك لا يركز على التفاصيل الصغيرة، ويرتكب أخطاء كثيرة بسببها."}, {"id": "dsm_in_2", "domain": "inattention", "ar_self": "أجد صعوبة في الاستمرار بالتركيز على أي نشاط أو عمل.", "ar_child": "طفلك يجد صعوبة في الاستمرار بالتركيز على أي نشاط أو عمل."}, {"id": "dsm_in_3", "domain": "inattention", "ar_self": "لا أستمع جيدًا عندما يتحدث معي أحد.", "ar_child": "طفلك يبدو وكأنه لا يستمع عندما يتحدث معه أحد."}, {"id": "dsm_in_4", "domain": "inattention", "ar_self": "أجد صعوبة في تنفيذ التعليمات أو إنهاء المهام اليومية.", "ar_child": "طفلك يجد صعوبة في تنفيذ التعليمات أو إنهاء المهام اليومية."}, {"id": "dsm_in_5", "domain": "inattention", "ar_self": "غالبًا لا أنظّم أنشطتي أو أغراضي الخاصة.", "ar_child": "طفلك غالبًا لا ينظّم أنشطته أو أغراضه الخاصة."}, {"id": "dsm_in_6", "domain": "inattention", "ar_self": "أتردد أو أتجنّب الأنشطة التي تحتاج تفكيرًا طويلاً.", "ar_child": "طفلك يتردد أو يتجنّب الأنشطة التي تحتاج تفكيرًا طويلاً."}, {"id": "dsm_in_7", "domain": "inattention", "ar_self": "كثيرًا ما أفقد أشياء أحتاجها (أقلامي، كتبي، أغراضي..).", "ar_child": "طفلك كثيرًا ما يفقد أشياء يحتاجها (أقلامه، كتبه، أغراضه..)."}, {"id": "dsm_in_8", "domain": "inattention", "ar_self": "أنتبه بسهولة لأي شيء من حولي وأفقد تركيزي بسرعة.", "ar_child": "طفلك ينتبه بسهولة لأي شيء من حوله ويفقد تركيزه بسرعة."}, {"id": "dsm_in_9", "domain": "inattention", "ar_self": "كثيرًا ما أنسى ما هو مطلوب مني.", "ar_child": "طفلك كثيرًا ما ينسى ما هو مطلوب منه."}, {"id": "dsm_hy_1", "domain": "hyperactivity", "ar_self": "لا أهدأ، وأحرّك يدي أو قدمي باستمرار.", "ar_child": "طفلك لا يهدأ، ويحرّك يديه أو قدميه باستمرار."}, {"id": "dsm_hy_2", "domain": "hyperactivity", "ar_self": "أجد صعوبة في الجلوس بثبات، وأترك مكاني دون إذن.", "ar_child": "طفلك يجد صعوبة في الجلوس بثبات، ويترك مكانه دون إذن."}, {"id": "dsm_hy_3", "domain": "hyperactivity", "ar_self": "أشعر بتوتر وقلق مستمر، ولا أستطيع الجلوس بهدوء.", "ar_child": "طفلك يتحرك أو يتسلق في أماكن غير مناسبة."}, {"id": "dsm_hy_4", "domain": "hyperactivity", "ar_self": "أجد صعوبة في القيام بأنشطة هادئة دون إزعاج.", "ar_child": "طفلك يجد صعوبة في اللعب أو القيام بأنشطة بهدوء."}, {"id": "dsm_hy_5", "domain": "hyperactivity", "ar_self": "أبقى في حركة دائمة، وقلّما أستقر في مكاني لفترة طويلة.", "ar_child": "طفلك يبقى في حركة دائمة، وقلّما يستقر في مكانه لفترة طويلة."}, {"id": "dsm_hy_6", "domain": "hyperactivity", "ar_self": "أتحدث أكثر من اللازم.", "ar_child": "طفلك يتحدث أكثر من اللازم."}, {"id": "dsm_hy_7", "domain": "hyperactivity", "ar_self": "أجيب عن الأسئلة قبل أن يكتمل طرحها.", "ar_child": "طفلك يجيب عن الأسئلة قبل أن يكتمل طرحها."}, {"id": "dsm_hy_8", "domain": "hyperactivity", "ar_self": "أجد صعوبة في انتظار دوري.", "ar_child": "طفلك يجد صعوبة في انتظار دوره."}, {"id": "dsm_hy_9", "domain": "hyperactivity", "ar_self": "أقاطع أو أتدخّل في أحاديث وأنشطة الآخرين دون استئذان.", "ar_child": "طفلك يقاطع أو يتدخّل في أحاديث وأنشطة الآخرين دون استئذان."}];
+const HYPERAROUSAL_QUESTIONS = [{"id": "ha_1", "ar_self": "هل تشعر أنك لا تستطيع الاسترخاء، حتى في نهاية الأسبوع والعطل؟", "ar_child": "هل يشعر طفلك أنه لا يستطيع الاسترخاء، حتى في نهاية الأسبوع والعطل؟"}, {"id": "ha_2", "ar_self": "عند القيام بنشاط هادئ مثل مشاهدة التلفزيون مع العائلة، هل تجد نفسك تتجول في الغرفة أو تنشغل بهاتفك بدل التركيز؟", "ar_child": "عند القيام بنشاط هادئ مثل مشاهدة التلفزيون مع العائلة، هل تلاحظ أن طفلك يتجول في الغرفة أو ينشغل بغير ذلك بدل التركيز؟"}, {"id": "ha_3", "ar_self": "هل تجد صعوبة في النوم لأن أفكارك لا تهدأ وتستمر بالقلق؟", "ar_child": "هل يجد طفلك صعوبة في النوم لأن أفكاره لا تهدأ ويستمر بالقلق؟"}, {"id": "ha_4", "ar_self": "قبل تشخيصك باضطراب فرط الحركة وتشتت الانتباه، هل قيل لك إنك قد تعاني من الاكتئاب أو القلق أو اضطراب ثنائي القطب أو اضطراب الشخصية الحدية؟", "ar_child": "قبل تشخيص طفلك باضطراب فرط الحركة وتشتت الانتباه، هل قيل لكم إنه قد يعاني من الاكتئاب أو القلق أو اضطراب ثنائي القطب أو اضطراب الشخصية الحدية؟"}, {"id": "ha_5", "ar_self": "هل تشعر بمشاعرك بشكل أقوى وأفجأ من الأشخاص من حولك؟", "ar_child": "هل يشعر طفلك بمشاعره بشكل أقوى وأفجأ من الأشخاص من حوله؟"}, {"id": "ha_6", "ar_self": "هل أنت حساس تجاه الرفض أو النقد أو الشعور بالفشل؟", "ar_child": "هل طفلك حساس تجاه الرفض أو النقد أو الشعور بالفشل؟"}, {"id": "ha_7", "ar_self": "هل تشعر أن مشاعرك القوية (فرح، غضب، حزن) تظهر فجأة ثم تختفي بنفس السرعة؟", "ar_child": "هل تلاحظ أن مشاعر طفلك القوية (فرح، غضب، حزن) تظهر فجأة ثم تختفي بنفس السرعة؟"}, {"id": "ha_8", "ar_self": "هل يشتكي من حولك من صعوبة فهم ردود أفعالك أو مواكبة مشاعرك المتغيرة؟", "ar_child": "هل يشتكي من حول طفلك من صعوبة فهم ردود أفعاله أو مواكبة مشاعره المتغيرة؟"}, {"id": "ha_9", "ar_self": "هل تشعر أنك لا تستطيع إبعاد فكرة معينة عن ذهنك مهما حاولت؟", "ar_child": "هل تلاحظ أن طفلك لا يستطيع إبعاد فكرة معينة عن ذهنه مهما حاول؟"}, {"id": "ha_10", "ar_self": "هل شعرت (أو قيل لك) أن مشاعرك القوية تجعلك تبدو مختلفًا عن الآخرين؟", "ar_child": "هل شعرتم (أو قيل لكم) أن مشاعر طفلك القوية تجعله يبدو مختلفًا عن الآخرين؟"}, {"id": "ha_11", "ar_self": "هل تشعر بعدم احترام لذاتك بسبب ردود أفعالك العاطفية القوية؟", "ar_child": "هل يشعر طفلك بعدم احترام لذاته بسبب ردود أفعاله العاطفية القوية؟"}, {"id": "ha_12", "ar_self": "هل تشعر أنك تفكر في عدة أشياء بنفس الوقت باستمرار؟", "ar_child": "هل تلاحظ أن طفلك يفكر في عدة أشياء بنفس الوقت باستمرار؟"}, {"id": "ha_13", "ar_self": "هل يتغير مزاجك بسرعة دون أن تلاحظ ذلك؟", "ar_child": "هل يتغير مزاج طفلك بسرعة دون أن يلاحظ ذلك؟"}, {"id": "ha_14", "ar_self": "هل تنتبه لحركة جسدك، مثل تململك المستمر أو تحريك رجلك أو التنقير بأصابعك؟", "ar_child": "هل تلاحظ حركة جسد طفلك المستمرة، مثل التململ أو تحريك رجليه أو التنقير بأصابعه؟"}, {"id": "ha_15", "ar_self": "هل تمر بانهيارات أو انفعالات مفاجئة تجعل من حولك يخافون منك؟", "ar_child": "هل يمر طفلك بانهيارات أو انفعالات مفاجئة تجعل من حوله يخافون منه؟"}, {"id": "ha_16", "ar_self": "هل أثّرت مشاعرك القوية على علاقاتك الشخصية أو مسيرتك المهنية؟", "ar_child": "هل أثّرت مشاعر طفلك القوية على علاقاته الشخصية أو أدائه الدراسي؟"}, {"id": "ha_17", "ar_self": "كشخص بالغ، هل تشعر أحيانًا وكأنك طفل بسبب صعوبة ضبط مشاعرك؟", "ar_child": "هل تشعرون أن طفلك يواجه صعوبة أكبر من أقرانه في ضبط مشاعره؟"}];
+const EF_QUESTIONS = [{"id": "ef_1", "domain": "self_control", "ar_self": "لا أتسرع في الحكم على الأمور.", "ar_child": "طفلك لا يتسرع في الحكم على الأمور."}, {"id": "ef_2", "domain": "self_control", "ar_self": "أفكر قبل أن أتكلم.", "ar_child": "طفلك يفكر قبل أن يتكلم."}, {"id": "ef_3", "domain": "self_control", "ar_self": "أتأكد من كل التفاصيل قبل أن أتصرف.", "ar_child": "طفلك يتأكد من كل التفاصيل قبل أن يتصرف."}, {"id": "ef_4", "domain": "working_memory", "ar_self": "أتذكر الحقائق والتواريخ والتفاصيل بسهولة.", "ar_child": "طفلك يتذكر الحقائق والتواريخ والتفاصيل بسهولة."}, {"id": "ef_5", "domain": "working_memory", "ar_self": "أتذكر جيدًا الأشياء التي التزمت بها سابقًا.", "ar_child": "طفلك يتذكر جيدًا الأشياء التي التزم بها سابقًا."}, {"id": "ef_6", "domain": "working_memory", "ar_self": "أتذكر إنجاز مهامي دون تذكير من أحد.", "ar_child": "طفلك يتذكر إنجاز مهامه دون تذكير من أحد."}, {"id": "ef_7", "domain": "emotion_regulation", "ar_self": "مشاعري لا تعيق عملي.", "ar_child": "مشاعر طفلك لا تعيق أداءه."}, {"id": "ef_8", "domain": "emotion_regulation", "ar_self": "الأمور الصغيرة لا تشتت انتباهي عن مهمتي.", "ar_child": "الأمور الصغيرة لا تشتت انتباه طفلك عن مهمته."}, {"id": "ef_9", "domain": "emotion_regulation", "ar_self": "أحافظ على هدوئي عند الإحباط أو الغضب.", "ar_child": "يحافظ طفلك على هدوئه عند الإحباط أو الغضب."}, {"id": "ef_10", "domain": "task_initiation", "ar_self": "أبدأ المهمة بأسرع وقت ممكن دون تأجيل.", "ar_child": "يبدأ طفلك المهمة بأسرع وقت ممكن دون تأجيل."}, {"id": "ef_11", "domain": "task_initiation", "ar_self": "التسويف ليس مشكلة بالنسبة لي.", "ar_child": "التسويف ليس مشكلة بالنسبة لطفلك."}, {"id": "ef_12", "domain": "task_initiation", "ar_self": "أنجز مهامي قبل اللحظة الأخيرة.", "ar_child": "ينجز طفلك مهامه قبل اللحظة الأخيرة."}, {"id": "ef_13", "domain": "sustained_attention", "ar_self": "من السهل علي التركيز والاستمرار في عملي.", "ar_child": "من السهل على طفلك التركيز والاستمرار في عمله."}, {"id": "ef_14", "domain": "sustained_attention", "ar_self": "بمجرد أن أبدأ مهمة، أكملها بجد.", "ar_child": "بمجرد أن يبدأ طفلك مهمة، يكملها بجد."}, {"id": "ef_15", "domain": "sustained_attention", "ar_self": "حتى لو قوطعت، أستطيع العودة لعملي بسهولة.", "ar_child": "حتى لو قوطع، يستطيع طفلك العودة لعمله بسهولة."}, {"id": "ef_16", "domain": "planning_prioritizing", "ar_self": "أبدأ يومي بخطة واضحة.", "ar_child": "يبدأ طفلك يومه بخطة واضحة."}, {"id": "ef_17", "domain": "planning_prioritizing", "ar_self": "أستطيع التركيز على الأهم عندما يكون لدي عدة مهام.", "ar_child": "يستطيع طفلك التركيز على الأهم عندما يكون لديه عدة مهام."}, {"id": "ef_18", "domain": "planning_prioritizing", "ar_self": "أقسّم مهامي الكبيرة إلى خطوات صغيرة بجدول زمني.", "ar_child": "يقسّم طفلك مهامه الكبيرة إلى خطوات صغيرة بجدول زمني."}, {"id": "ef_19", "domain": "organization", "ar_self": "أنا شخص منظم.", "ar_child": "طفلك شخص منظم."}, {"id": "ef_20", "domain": "organization", "ar_self": "أحافظ على مكان عملي مرتبًا بشكل طبيعي.", "ar_child": "يحافظ طفلك على أغراضه مرتبة بشكل طبيعي."}, {"id": "ef_21", "domain": "organization", "ar_self": "لدي طرق ثابتة تساعدني على تنظيم عملي.", "ar_child": "لدى طفلك طرق ثابتة تساعده على تنظيم أموره."}, {"id": "ef_22", "domain": "time_management", "ar_self": "في نهاية اليوم، أكون قد أنجزت ما خططت له.", "ar_child": "في نهاية اليوم، يكون طفلك قد أنجز ما خطط له."}, {"id": "ef_23", "domain": "time_management", "ar_self": "أقدّر جيدًا كم من الوقت تحتاجه أي مهمة.", "ar_child": "يقدّر طفلك جيدًا كم من الوقت تحتاجه أي مهمة."}, {"id": "ef_24", "domain": "time_management", "ar_self": "أصل في الوقت المحدد لمواعيدي.", "ar_child": "يصل طفلك في الوقت المحدد لمواعيده."}, {"id": "ef_25", "domain": "flexibility", "ar_self": "أستفيد من المفاجآت والأحداث غير المتوقعة.", "ar_child": "يستفيد طفلك من المفاجآت والأحداث غير المتوقعة."}, {"id": "ef_26", "domain": "flexibility", "ar_self": "أتكيف بسهولة مع تغيّر الخطط.", "ar_child": "يتكيف طفلك بسهولة مع تغيّر الخطط."}, {"id": "ef_27", "domain": "flexibility", "ar_self": "أعتبر نفسي مرنًا وقادرًا على التكيف مع التغيير.", "ar_child": "طفلك مرن وقادر على التكيف مع التغيير."}, {"id": "ef_28", "domain": "metacognition", "ar_self": "أراجع أدائي وأطوّر طرقًا جديدة لتحسينه.", "ar_child": "يراجع طفلك أداءه ويطوّر طرقًا جديدة لتحسينه."}, {"id": "ef_29", "domain": "metacognition", "ar_self": "أستطيع اتخاذ قرارات موضوعية بعيدًا عن مشاعري.", "ar_child": "يستطيع طفلك اتخاذ قرارات موضوعية بعيدًا عن مشاعره."}, {"id": "ef_30", "domain": "metacognition", "ar_self": "أرى الصورة الكاملة وأستمتع بحل المشكلات.", "ar_child": "يرى طفلك الصورة الكاملة ويستمتع بحل المشكلات."}, {"id": "ef_31", "domain": "goal_persistence", "ar_self": "أشعر بالدافع القوي لتحقيق أهدافي.", "ar_child": "يشعر طفلك بالدافع القوي لتحقيق أهدافه."}, {"id": "ef_32", "domain": "goal_persistence", "ar_self": "أستطيع تأجيل المتعة الفورية لأهداف طويلة المدى.", "ar_child": "يستطيع طفلك تأجيل المتعة الفورية لأهداف طويلة المدى."}, {"id": "ef_33", "domain": "goal_persistence", "ar_self": "أؤمن بوضع أهداف وتحقيق أداء عالٍ.", "ar_child": "يؤمن طفلك بوضع أهداف وتحقيق أداء عالٍ."}, {"id": "ef_34", "domain": "stress_tolerance", "ar_self": "أستمتع بالعمل السريع وذي المتطلبات العالية.", "ar_child": "يستمتع طفلك بالعمل السريع وذي المتطلبات العالية."}, {"id": "ef_35", "domain": "stress_tolerance", "ar_self": "الضغط يساعدني على الأداء بشكل أفضل.", "ar_child": "الضغط يساعد طفلك على الأداء بشكل أفضل."}, {"id": "ef_36", "domain": "stress_tolerance", "ar_self": "ينجذب لي العمل الذي فيه تحدٍ وعدم قدرة على التنبؤ.", "ar_child": "ينجذب طفلك للعمل الذي فيه تحدٍ وعدم قدرة على التنبؤ."}];
+const EF_DOMAIN_LABELS_AR = {"self_control": "ضبط رد الفعل / التحكم في الذات", "working_memory": "الذاكرة العاملة", "emotion_regulation": "إدارة الانفعال", "task_initiation": "التنشيط / البدء بالمهام", "sustained_attention": "تركيز الانتباه", "planning_prioritizing": "التخطيط / وضع الأولويات", "organization": "التنظيم", "time_management": "إدارة الوقت", "flexibility": "المرونة", "metacognition": "ما وراء المعرفة", "goal_persistence": "المثابرة لتحقيق الأهداف", "stress_tolerance": "تحمل القلق / الإجهاد"};
+const EI_QUESTIONS = [{"id": "ei_1", "domain": "self_awareness", "ar": "أدرك على الفور عندما أفقد أعصابي.", "en": "I realize immediately when I lose my temper."}, {"id": "ei_2", "domain": "managing_emotions", "ar": "يمكنني إعادة صياغة الموقف السيء بسرعة.", "en": "I can reframe a bad situation quickly."}, {"id": "ei_3", "domain": "motivating_self", "ar": "أنا قادر على تحفيز نفسي للقيام بمهام صعبة.", "en": "I am always able to motivate myself to do difficult tasks."}, {"id": "ei_4", "domain": "empathy", "ar": "أنا قادر على رؤية الأشياء من وجهة نظر الشخص الآخر.", "en": "I'm always able to see things from another person's viewpoint."}, {"id": "ei_5", "domain": "social_skills", "ar": "أنا مستمع ممتاز.", "en": "I am an excellent listener."}, {"id": "ei_6", "domain": "self_awareness", "ar": "أعرف عندما أكون سعيدًا.", "en": "I know when I am happy."}, {"id": "ei_7", "domain": "managing_emotions", "ar": "أنا لا أظهر مشاعري الحقيقية.", "en": "I do not show my true emotions."}, {"id": "ei_8", "domain": "motivating_self", "ar": "أستطيع تحديد أولويات الأنشطة المهمة في العمل والتعامل معها.", "en": "I'm usually able to prioritize important activities at work and get on with them."}, {"id": "ei_9", "domain": "empathy", "ar": "أنا ممتاز في التعاطف مع مشكلة شخص آخر.", "en": "I'm excellent at empathizing with someone else's problem."}, {"id": "ei_10", "domain": "social_skills", "ar": "أنا لا أقاطع محادثات الآخرين.", "en": "I never interrupt other people's conversations."}, {"id": "ei_11", "domain": "self_awareness", "ar": "أدرك عندما أكون متوترًا.", "en": "I usually recognize I am stressed."}, {"id": "ei_12", "domain": "managing_emotions", "ar": "من الصعب على الآخرين معرفة حالتي المزاجية.", "en": "Others can rarely tell what kind of mood I am in."}, {"id": "ei_13", "domain": "motivating_self", "ar": "ألتزم بالمواعيد النهائية.", "en": "I always meet deadlines."}, {"id": "ei_14", "domain": "empathy", "ar": "يمكنني معرفة ما إذا كان شخص ما ليس سعيدا معي.", "en": "I can tell if someone is not happy with me."}, {"id": "ei_15", "domain": "social_skills", "ar": "أنا جيد في التكيف والاختلاط مع مجموعة متنوعة من الناس.", "en": "I am good at adapting and mixing with variety of people."}, {"id": "ei_16", "domain": "self_awareness", "ar": "عندما أكون عاطفيا أدرك ذلك.", "en": "I am aware when I am emotional."}, {"id": "ei_17", "domain": "managing_emotions", "ar": "أتحكم بأعصابي مع الآخرين.", "en": "I rarely lose my temper with others."}, {"id": "ei_18", "domain": "motivating_self", "ar": "أنا لا أضيع وقتي.", "en": "I never waste time."}, {"id": "ei_19", "domain": "empathy", "ar": "يمكنني معرفة ما إذا كان فريق من الناس لا يتوافقون مع بعضهم.", "en": "I can tell if teams are not getting along with each other."}, {"id": "ei_20", "domain": "social_skills", "ar": "الناس هم الشيء الأكثر إثارة للاهتمام في الحياة بالنسبة لي.", "en": "People are the most interesting thing in life for me."}, {"id": "ei_21", "domain": "self_awareness", "ar": "عندما أشعر بالقلق، أستطيع تفسير الأسباب.", "en": "When I feel anxious, I usually can account for the reasons."}, {"id": "ei_22", "domain": "managing_emotions", "ar": "الناس الصعبة لا تزعجني.", "en": "Difficult people do not annoy me."}, {"id": "ei_23", "domain": "motivating_self", "ar": "أنا لا أراوغ حين أتحدث أو أتصرف.", "en": "I do not speak or act in an evasive way."}, {"id": "ei_24", "domain": "empathy", "ar": "أفهم سبب صعوبة التعامل معي.", "en": "I usually understand why people find it difficult to deal with me."}, {"id": "ei_25", "domain": "social_skills", "ar": "أحب مقابلة أشخاص جدد والتعرف إلى ما يجعلهم يتصرفون بطريقتهم.", "en": "I love meeting new people and getting to know what makes them act the way they act."}, {"id": "ei_26", "domain": "self_awareness", "ar": "أعرف عندما أكون غير منطقي.", "en": "I always know when I am being unreasonable."}, {"id": "ei_27", "domain": "managing_emotions", "ar": "يمكنني بوعي تغيير أفكاري أو مزاجي.", "en": "I can consciously change my mind or mood."}, {"id": "ei_28", "domain": "motivating_self", "ar": "أعتقد أنه يمكنك القيام بالأشياء الصعبة أولا.", "en": "I believe you should do the difficult things first."}, {"id": "ei_29", "domain": "empathy", "ar": "الأفراد الآخرون ليسوا صعبين لكنهم مختلفون.", "en": "Other individuals are not difficult just different."}, {"id": "ei_30", "domain": "social_skills", "ar": "أحتاج إلى مجموعة متنوعة من زملاء العمل لجعل وظيفتي ممتعة.", "en": "I need a variety of work colleagues to make my job interesting."}, {"id": "ei_31", "domain": "self_awareness", "ar": "الوعي بمشاعري مهم جدًا بالنسبة لي.", "en": "Awareness of my own emotions is important to me all the time."}, {"id": "ei_32", "domain": "managing_emotions", "ar": "لا أسمح للمواقف العصيبة أو الناس بالتأثير علي بمجرد ما أترك العمل.", "en": "I do not let stressful situations or people affect me once I leave work."}, {"id": "ei_33", "domain": "motivating_self", "ar": "أؤمن بالصبر وتأجيل المكافأة الفورية من أجل هدف أكبر.", "en": "Delayed gratification is a virtue that I hold to."}, {"id": "ei_34", "domain": "empathy", "ar": "أستطيع أن أفهم ما إذا كنت غير منطقي.", "en": "I can understand if I am being unreasonable."}, {"id": "ei_35", "domain": "social_skills", "ar": "أحب طرح الأسئلة لمعرفة ما هو مهم للناس.", "en": "I like to ask questions to find out what is important to others."}, {"id": "ei_36", "domain": "self_awareness", "ar": "يمكنني معرفة ما إذا كان شخص ما قد ضايقني أو أزعجني.", "en": "I can tell if someone has upset or annoyed me."}, {"id": "ei_37", "domain": "managing_emotions", "ar": "لا أقلق بشأن العمل أو الحياة بشكل عام.", "en": "I rarely worry about work or life in general."}, {"id": "ei_38", "domain": "motivating_self", "ar": "أؤمن بأنه يجب التصرف اليوم بدل التأجيل.", "en": "I believe in \"some actions must be taken today!\""}, {"id": "ei_39", "domain": "empathy", "ar": "أستطيع أن أفهم لماذا قد تسيء أفعالي للآخرين.", "en": "I can understand why my actions sometimes offend others."}, {"id": "ei_40", "domain": "social_skills", "ar": "أرى أن العمل مع بعض الأشخاص الصعبين مجرد تحدٍ لكسبهم.", "en": "I see working with other people as a challenge to win them over."}, {"id": "ei_41", "domain": "self_awareness", "ar": "يمكنني أن أترك الغضب يهدأ بسرعة حتى لا يؤثر بي.", "en": "I can let anger go quickly so that it no longer affects me."}, {"id": "ei_42", "domain": "managing_emotions", "ar": "يمكنني قمع مشاعري عندما أحتاج لذلك.", "en": "I can suppress my emotions when I need to."}, {"id": "ei_43", "domain": "motivating_self", "ar": "يمكنني تحفيز نفسي حتى عندما أشعر بالضعف.", "en": "I can always motivate myself even when I feel low."}, {"id": "ei_44", "domain": "empathy", "ar": "أستطيع رؤية الأشياء من وجهة نظر الآخرين.", "en": "I can sometimes see things from others' point of view."}, {"id": "ei_45", "domain": "social_skills", "ar": "أنا جيد في قبول الاختلافات مع الآخرين.", "en": "I am good at accepting differences with other people."}, {"id": "ei_46", "domain": "self_awareness", "ar": "أعرف ما يجعلني سعيدا.", "en": "I know what makes me happy."}, {"id": "ei_47", "domain": "managing_emotions", "ar": "لا يعرف الآخرون ما أشعر به تجاه الأشياء.", "en": "Others often do not know how I am feeling about things."}, {"id": "ei_48", "domain": "motivating_self", "ar": "لطالما كان التحفيز مفتاح نجاحي.", "en": "Motivation has been the key to my success."}, {"id": "ei_49", "domain": "empathy", "ar": "أسباب الخلافات واضحة بالنسبة لي.", "en": "Reasons for disagreements are always clear to me."}, {"id": "ei_50", "domain": "social_skills", "ar": "أبني علاقات متينة مع من أعمل معهم.", "en": "I generally build solid relations with those I work with."}];
+const EI_DOMAIN_LABELS_AR = {"self_awareness": "الوعي الذاتي", "managing_emotions": "إدارة المشاعر", "motivating_self": "تحفيز الذات", "empathy": "التعاطف", "social_skills": "المهارات الاجتماعية"};
+const STRENGTHS_QUESTIONS = [{"id": "str_1", "ar_self": "ما هي الموهبة التي تتمتع بها؟ (فنان – كاتب – قيادي – متحدث – رياضي)", "ar_child": "ما هي الموهبة التي يتمتع بها طفلك؟ (فنان – كاتب – قيادي – متحدث – رياضي)"}, {"id": "str_2", "ar_self": "ما هي السمات الشخصية التي تتمتع بها وتُعد من بين نقاط قوتك؟ (محب – قيادي – ملتزم – صبور – طموح – صادق – مستقل – منظم – شجاع.. الخ)", "ar_child": "ما هي السمات الشخصية التي يتمتع بها طفلك وتُعد من بين نقاط قوته؟ (محب – قيادي – ملتزم – صبور – طموح – صادق – مستقل – منظم – شجاع.. الخ)"}, {"id": "str_3", "ar_self": "ما هي المهارات/المجالات التي تبدع بها وتود أن تتخصص فيها؟", "ar_child": "ما هي المهارات/المجالات التي يبدع بها طفلك ويحب أن يتخصص فيها؟"}, {"id": "str_4", "ar_self": "كيف تقضي أوقات فراغك؟ (مع العائلة والأصدقاء – مواقع التواصل الاجتماعي – وحيدا – تمارس الرياضة – تقرأ.. وغيرها)", "ar_child": "كيف يقضي طفلك أوقات فراغه؟ (مع العائلة والأصدقاء – الألعاب الإلكترونية – وحيدًا – يمارس الرياضة – يقرأ.. وغيرها)"}, {"id": "str_5", "ar_self": "كيف تتعلم أفضل؟ (وحيدا – مع مجموعة صغيرة – داخل الفصل)", "ar_child": "كيف يتعلم طفلك بشكل أفضل؟ (وحيدًا – مع مجموعة صغيرة – داخل الفصل)"}, {"id": "str_6", "ar_self": "ما هو أسلوب تعلمك المفضل؟ (متعلم بصري – سمعي – حركي)", "ar_child": "ما هو أسلوب التعلم المفضل لدى طفلك؟ (بصري – سمعي – حركي)"}, {"id": "str_7", "ar_self": "ما هو المكان المفضل لديك للدراسة؟", "ar_child": "ما هو المكان المفضل لدى طفلك للدراسة؟"}, {"id": "str_8", "ar_self": "ما هو النشاط المفضل لديك في الصف أو المحاضرة؟ (القراءة – المناقشة – الألعاب الجماعية – المشاريع.. الخ)", "ar_child": "ما هو النشاط المفضل لدى طفلك في الصف؟ (القراءة – المناقشة – الألعاب الجماعية – المشاريع.. الخ)"}, {"id": "str_9", "ar_self": "هل يتوافق التخصص الذي اخترته مع نقاط قوتك/ضعفك؟", "ar_child": "هل تلاحظ توافقًا بين اهتمامات طفلك الحالية ونقاط قوته/ضعفه؟"}];
+
+/* EF scoring bands (sum of 3 items, range 3-18) */
+function efBand(score){
+  if(score <= 8) return {ar:"مهارة تسبب عجزًا وتحتاج لاستراتيجيات تعويضية", en:"Impaired — needs compensatory strategies"};
+  if(score <= 11) return {ar:"مهارة تحتاج إلى انتباه وبذل جهد", en:"Needs attention and effort"};
+  if(score <= 14) return {ar:"مهارة جيدة ولكن قد تتأثر عند الضغط", en:"Good, but may be affected under pressure"};
+  return {ar:"مهارة ممتازة وتعمل بشكل تلقائي", en:"Excellent — works automatically"};
+}
+/* EI scoring bands (sum of 10 items, range 10-50) */
+function eiBand(score){
+  if(score <= 17) return {ar:"اجعل هذه المنطقة أولوية", en:"Make this a developmental priority"};
+  if(score <= 34) return {ar:"الاهتمام بهذه المنطقة سيؤتي ثماره", en:"Giving attention here will pay off"};
+  return {ar:"هذه المنطقة هي مصدر قوة لك", en:"This is a strength for you"};
+}
+
+/* ================== TOOL DEFINITIONS ================== */
+const TOOLS = {
+  dsm: {
+    id:"dsm", type:"yesno", groupByDomain:true, mergeTarget:9,
+    title_ar:"مقياس قصور الانتباه / فرط النشاط", title_en:"ADHD Screening (DSM-IV based)",
+    sub_ar:"أجب بنعم أو لا عن كل بند بناءً على آخر ستة أشهر.", sub_en:"Answer Yes or No for each item, based on the last six months.",
+    yes_label_ar:"نعم", no_label_ar:"لا", yes_label_en:"Yes", no_label_en:"No",
+    questions: DSM_QUESTIONS
+  },
+  hyperarousal: {
+    id:"hyperarousal", type:"yesno", chunkSize:9,
+    title_ar:"اختبار فرط الإثارة العاطفية", title_en:"Emotional Hyperarousal Screening",
+    sub_ar:"أجب بنعم أو لا عن كل سؤال.", sub_en:"Answer Yes or No for each question.",
+    yes_label_ar:"نعم", no_label_ar:"لا", yes_label_en:"Yes", no_label_en:"No",
+    questions: HYPERAROUSAL_QUESTIONS
+  },
+  ef: {
+    id:"ef", type:"likert6", groupByDomain:true, mergeTarget:12,
+    title_ar:"استبيان الوظائف التنفيذية للدماغ", title_en:"Executive Function Assessment",
+    sub_ar:"لكل عبارة، اختر إلى أي درجة هي صحيحة بالنسبة لك.", sub_en:"For each statement, choose how true it is for you.",
+    scale_ar:["غير صحيح إطلاقًا","غير صحيح غالبًا","صحيح قليلاً","صحيح إلى حد ما","صحيح غالبًا","صحيح تمامًا"],
+    scale_en:["Not true at all","Mostly not true","Slightly true","Somewhat true","Mostly true","Completely true"],
+    domainLabels: EF_DOMAIN_LABELS_AR,
+    questions: EF_QUESTIONS
+  },
+  ei: {
+    id:"ei", type:"likert5", groupByDomain:true, mergeTarget:20,
+    title_ar:"اختبار الذكاء العاطفي", title_en:"Emotional Intelligence Test",
+    sub_ar:"لكل عبارة، اختر إلى أي درجة هي صحيحة بالنسبة لك.", sub_en:"For each statement, choose how true it is for you.",
+    scale_ar:["غير صحيح إطلاقًا","غير صحيح غالبًا","صحيح أحيانًا","صحيح غالبًا","صحيح تمامًا"],
+    scale_en:["Not true at all","Mostly not true","Somewhat true","Mostly true","Completely true"],
+    domainLabels: EI_DOMAIN_LABELS_AR,
+    questions: EI_QUESTIONS
+  },
+  strengths: {
+    id:"strengths", type:"opentext", chunkSize:9,
+    title_ar:"من أنت؟ وما هي نقاط قوتك؟", title_en:"Who are you? What are your strengths?",
+    sub_ar:"أجب بصدق وبإسهاب قدر الإمكان — لا توجد إجابة خاطئة.", sub_en:"Answer honestly and in as much detail as you like — there's no wrong answer.",
+    questions: STRENGTHS_QUESTIONS
+  }
+};
+
+/* Path sets per your rule: not diagnosed = DSM-IV + Hyperarousal. diagnosed = EF + Hyperarousal + Strengths.
+   EI is set aside for now — planned as a separate standalone service later, not part of this tool. */
+function getToolSequence(){
+  return state.diagnosed ? ["ef","hyperarousal","strengths"] : ["dsm","hyperarousal"];
+}
+
+/* Split a tool's questions into "milestone chunks". For domain-based tools (EF/EI),
+   consecutive domains are merged together until roughly hitting mergeTarget questions —
+   so a milestone appears roughly as often as a client's patience allows, not after every
+   tiny 3-question domain. Non-domain tools (yes/no, open text) just chunk by chunkSize. */
+function getChunks(tool){
+  if(tool.groupByDomain){
+    const target = tool.mergeTarget || 12;
+    const domainGroups = [];
+    let cur = null;
+    tool.questions.forEach(q=>{
+      if(!cur || cur.domain !== q.domain){
+        cur = {domain:q.domain, questions:[]};
+        domainGroups.push(cur);
+      }
+      cur.questions.push(q);
+    });
+
+    const chunks = [];
+    let chunk = null;
+    domainGroups.forEach(dg=>{
+      if(!chunk){
+        chunk = {domains:[dg.domain], questions:[...dg.questions]};
+      } else if(chunk.questions.length < target){
+        chunk.domains.push(dg.domain);
+        chunk.questions = chunk.questions.concat(dg.questions);
+      } else {
+        chunks.push(chunk);
+        chunk = {domains:[dg.domain], questions:[...dg.questions]};
+      }
+    });
+    if(chunk) chunks.push(chunk);
+    return chunks;
+  }
+  const size = tool.chunkSize || 9;
+  const chunks = [];
+  for(let i=0; i<tool.questions.length; i+=size){
+    chunks.push({domains:null, questions:tool.questions.slice(i, i+size)});
+  }
+  return chunks;
+}
+
+/* ================== STATE ================== */
+let state = {
+  perspective: null, // 'self' | 'child'
+  diagnosed: null,
+  agree: false,
+  fullName: "",
+  email: "",
+  childName: "",
+  answers: {},
+  toolIndex: 0,
+  chunkIndex: 0,
+  pendingTransition: null // {toolComplete: bool, final: bool}
+};
+let lang = "ar";
+
+const params = new URLSearchParams(window.location.search);
+if (params.get("email")) { state.email = decodeURIComponent(params.get("email")); }
+if (params.get("name")) { state.fullName = decodeURIComponent(params.get("name")); }
+
+/* ================== TRANSLATIONS (static UI strings) ================== */
+const T = {
+  ar: {
+    stepLabel1:"الخطوة ١ من ٣", stepLabel2:"الخطوة ٢ من ٣", stepLabel3:"الخطوة ٣ من ٣",
+    perspectiveTitle:"لمن هذا التقييم؟",
+    perspectiveSub:"هذا يساعدنا على استخدام الأسئلة المناسبة.",
+    perspectiveSelf:"لنفسي",
+    perspectiveChild:"لطفلي",
+    q1titleSelf:"هل تم تشخيصك سابقًا بفرط الحركة وتشتت الانتباه (ADHD)؟",
+    q1titleChild:"هل تم تشخيص طفلك سابقًا بفرط الحركة وتشتت الانتباه (ADHD)؟",
+    q1subSelf:"هذا يساعدنا على تجهيز التقييم المناسب لك.",
+    q1subChild:"هذا يساعدنا على تجهيز التقييم المناسب لطفلك.",
+    yes:"نعم", no:"لا", next:"التالي", back:"رجوع", submit:"إرسال الإجابات",
+    contractTitle:"الموافقة على الشروط",
+    disclaimerBold:"تنويه مهم: ",
+    disclaimerTextSelf:"التقييمات المستخدمة هنا ليست أداة تشخيص طبي أو نفسي رسمية. الغرض منها هو مساعدتنا على فهم طريقة تفكيرك وتحدياتك بشكل أفضل، لكي نستطيع تصميم جلسات التدريب المناسبة لك. لأي تشخيص رسمي، يرجى مراجعة مختص مرخّص.",
+    disclaimerTextChild:"التقييمات المستخدمة هنا ليست أداة تشخيص طبي أو نفسي رسمية. الغرض منها هو مساعدتنا على فهم طفلك بشكل أفضل، لكي نستطيع تصميم جلسات التدريب المناسبة له. لأي تشخيص رسمي، يرجى مراجعة مختص مرخّص.",
+    agreeTextSelf:"أوافق على الشروط، وأفهم أن هذا التقييم ليس تشخيصًا رسميًا، وإنما لمساعدتنا على فهم كيفية العمل معي بشكل أفضل.",
+    agreeTextChild:"أوافق على الشروط، وأفهم أن هذا التقييم ليس تشخيصًا رسميًا، وإنما لمساعدتنا على فهم كيفية العمل مع طفلي بشكل أفضل.",
+    fullNameLbl:"الاسم الكامل (كتوقيع إلكتروني)",
+    parentNameLbl:"اسم ولي الأمر (كتوقيع إلكتروني)",
+    childNameLbl:"اسم الطفل",
+    emailLbl:"البريد الإلكتروني",
+    autofillNote:"تم تعبئة بياناتك تلقائيًا من حجزك — يمكنك تعديلها إذا أردت.",
+    doneTitle:"تم بنجاح!",
+    doneText:"شكرًا لك. تم استلام إجاباتك وسنكون جاهزين لمناقشتها في جلسة الاستقبال (Intake) القادمة.",
+    brandTitle:"قبل جلستك الأولى",
+    unansweredNote:"فضلاً أجب على جميع الأسئلة قبل المتابعة.",
+    milestoneCompleteLbl:"مكتمل",
+    milestoneTimeLbl:"الوقت المتبقي تقريبًا",
+    langToggle:"English"
+  },
+  en: {
+    stepLabel1:"Step 1 of 3", stepLabel2:"Step 2 of 3", stepLabel3:"Step 3 of 3",
+    perspectiveTitle:"Who is this assessment for?",
+    perspectiveSub:"This helps us use the right wording for the questions.",
+    perspectiveSelf:"Myself",
+    perspectiveChild:"My child",
+    q1titleSelf:"Have you been diagnosed with ADHD before?",
+    q1titleChild:"Has your child been diagnosed with ADHD before?",
+    q1subSelf:"This helps us prepare the right assessment for you.",
+    q1subChild:"This helps us prepare the right assessment for your child.",
+    yes:"Yes", no:"No", next:"Next", back:"Back", submit:"Submit answers",
+    contractTitle:"Agreeing to the terms",
+    disclaimerBold:"Important note: ",
+    disclaimerTextSelf:"These assessments are not an official medical or psychological diagnosis. Their purpose is to help us understand your thinking style and challenges, so we can design the right coaching sessions for you. For any official diagnosis, please consult a licensed professional.",
+    disclaimerTextChild:"These assessments are not an official medical or psychological diagnosis. Their purpose is to help us understand your child better, so we can design the right coaching sessions for them. For any official diagnosis, please consult a licensed professional.",
+    agreeTextSelf:"I agree to the terms, and understand this assessment is not an official diagnosis — it exists to help us understand how to work with me better.",
+    agreeTextChild:"I agree to the terms, and understand this assessment is not an official diagnosis — it exists to help us understand how to work with my child better.",
+    fullNameLbl:"Full name (as your e-signature)",
+    parentNameLbl:"Parent/guardian name (as e-signature)",
+    childNameLbl:"Child's name",
+    emailLbl:"Email",
+    autofillNote:"Filled in automatically from your booking — feel free to edit it.",
+    doneTitle:"All set!",
+    doneText:"Thank you. We've received your answers and will be ready to discuss them in your upcoming intake session.",
+    brandTitle:"Before your first session",
+    unansweredNote:"Please answer every question before continuing.",
+    milestoneCompleteLbl:"Complete",
+    milestoneTimeLbl:"Estimated time left",
+    langToggle:"العربية"
+  }
+};
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.getElementById("langToggle").innerText = T[lang].langToggle;
+  document.querySelectorAll("[data-t]").forEach(el=>{
+    const key = el.getAttribute("data-t");
+    if(T[lang][key]) el.innerText = T[lang][key];
+  });
+  if(!document.getElementById("step3").classList.contains("hidden")){
+    renderCurrentChunk();
+  }
+  if(!document.getElementById("stepMilestone").classList.contains("hidden")){
+    renderMilestoneScreen();
+  }
+  if(state.perspective){ updateDynamicText(); }
+}
+function toggleLang(){ lang = lang === "ar" ? "en" : "ar"; applyLang(); }
+
+/* ================== STEP 0: who is this for ================== */
+function selectPerspective(val){
+  state.perspective = val;
+  document.getElementById("btnSelf").classList.toggle("selected", val==="self");
+  document.getElementById("btnChild").classList.toggle("selected", val==="child");
+  document.getElementById("step0Next").disabled = false;
+  updateDynamicText();
+}
+
+/* Updates the handful of strings that change meaning based on state.perspective
+   (self vs. reporting on behalf of a child) — the diagnosis question, its subtitle,
+   the disclaimer, and whether the child-name field is shown. */
+function updateDynamicText(){
+  const isChild = state.perspective === "child";
+  const D = T[lang];
+  document.getElementById("q1title").innerText = isChild ? D.q1titleChild : D.q1titleSelf;
+  document.getElementById("q1sub").innerText = isChild ? D.q1subChild : D.q1subSelf;
+  document.getElementById("disclaimerTextEl").innerText = isChild ? D.disclaimerTextChild : D.disclaimerTextSelf;
+  document.getElementById("agreeTextEl").innerText = isChild ? D.agreeTextChild : D.agreeTextSelf;
+  document.getElementById("childNameField").classList.toggle("hidden", !isChild);
+  const parentNameLbl = document.getElementById("fullNameLblEl");
+  if(parentNameLbl){ parentNameLbl.innerText = isChild ? D.parentNameLbl : D.fullNameLbl; }
+}
+
+/* ================== STEP 1 ================== */
+function selectDiagnosis(val){
+  state.diagnosed = val;
+  document.getElementById("btnYes").classList.toggle("selected", val===true);
+  document.getElementById("btnNo").classList.toggle("selected", val===false);
+  document.getElementById("step1Next").disabled = false;
+}
+
+/* ================== STEP 2 ================== */
+function prefillStep2(){
+  if(state.fullName){ document.getElementById("fullName").value = state.fullName; }
+  if(state.email){ document.getElementById("clientEmail").value = state.email; }
+  if(state.fullName || state.email){ document.getElementById("autofillNote").classList.remove("hidden"); }
+  updateDynamicText();
+  checkContractReady();
+}
+function checkContractReady(){
+  state.agree = document.getElementById("agreeCheck").checked;
+  state.fullName = document.getElementById("fullName").value.trim();
+  state.email = document.getElementById("clientEmail").value.trim();
+  const isChild = state.perspective === "child";
+  if(isChild){ state.childName = document.getElementById("childName").value.trim(); }
+  const childOk = !isChild || !!state.childName;
+  document.getElementById("step2Next").disabled = !(state.agree && state.fullName && state.email && childOk);
+}
+
+/* ================== NAVIGATION: steps 1/2 vs step 3 chunk wizard, plus EI add-on screens ================== */
+const ALL_SCREEN_IDS = ["step0","step1","step2","step3","stepMilestone","stepDone"];
+function showOnly(id){
+  ALL_SCREEN_IDS.forEach(sid=>document.getElementById(sid).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function goToStep(n){
+  showOnly("step"+n);
+  document.querySelectorAll(".progress .seg").forEach(seg=>{
+    seg.classList.toggle("done", parseInt(seg.dataset.step) <= n);
+  });
+  document.getElementById("overallTrack").classList.toggle("hidden", n !== 3);
+  if(n === 2) prefillStep2();
+}
+
+function startAssessments(){
+  state.toolIndex = 0;
+  state.chunkIndex = 0;
+  goToStep(3);
+  renderCurrentChunk();
+}
+
+function currentTool(){ return TOOLS[getToolSequence()[state.toolIndex]]; }
+function currentChunks(){ return getChunks(currentTool()); }
+function currentChunk(){ return currentChunks()[state.chunkIndex]; }
+
+/* ---------- overall progress across the whole sequence ---------- */
+function allQuestionIdsInSequence(){
+  const ids = [];
+  getToolSequence().forEach(tid=> TOOLS[tid].questions.forEach(q=> ids.push(q.id)));
+  return ids;
+}
+function updateOverallProgress(){
+  const ids = allQuestionIdsInSequence();
+  const total = ids.length;
+  const answered = ids.filter(id=> state.answers[id] !== undefined).length;
+  const pct = total ? Math.round((answered/total)*100) : 0;
+  document.getElementById("overallFill").style.width = pct + "%";
+  return {total, answered, pct};
+}
+
+/* ================== RENDER CURRENT CHUNK OF QUESTIONS ================== */
+function renderCurrentChunk(){
+  const seq = getToolSequence();
+  const tool = currentTool();
+  const chunks = currentChunks();
+  const chunk = currentChunk();
+
+  const partLabel = (lang==="ar" ? "الجزء " : "Part ") + (state.chunkIndex+1) + (lang==="ar" ? " من " : " of ") + chunks.length;
+  document.getElementById("toolProgress").innerText = partLabel;
+  document.getElementById("chunkTitle").innerText = lang==="ar" ? tool.title_ar : tool.title_en;
+
+  let subLine;
+  if(chunk.domains && tool.domainLabels){
+    const names = chunk.domains.map(d=> tool.domainLabels[d]);
+    subLine = (lang==="ar" ? "يشمل: " : "Covers: ") + names.join(lang==="ar" ? "، " : ", ");
+  } else {
+    subLine = lang==="ar" ? tool.sub_ar : tool.sub_en;
+  }
+  document.getElementById("toolSub").innerText = subLine;
+  document.getElementById("unansweredNote").style.display = "none";
+
+  const legend = document.getElementById("scaleLegend");
+  if(tool.type === "likert6" || tool.type === "likert5"){
+    const scale = lang==="ar" ? tool.scale_ar : tool.scale_en;
+    legend.style.display = "block";
+    legend.innerHTML = scale.map((s,i)=> "<span class=\"scale-item\"><strong>"+(i+1)+"</strong> = "+s+"</span>").join("");
+  } else {
+    legend.style.display = "none";
+  }
+
+  const container = document.getElementById("questionContainer");
+  container.innerHTML = "";
+
+  let lastDomain = undefined;
+  chunk.questions.forEach(q=>{
+    if(tool.domainLabels && q.domain !== lastDomain){
+      lastDomain = q.domain;
+      const domainHeader = document.createElement("div");
+      domainHeader.style.cssText = "font-size:12px;color:var(--green-deep);font-weight:700;margin:18px 0 4px;text-transform:uppercase;letter-spacing:.04em;";
+      domainHeader.innerText = tool.domainLabels[q.domain] || q.domain;
+      container.appendChild(domainHeader);
+    }
+
+    const qBlock = document.createElement("div");
+    qBlock.className = "q-block";
+
+    const qTitle = document.createElement("div");
+    qTitle.className = "q-title";
+    const isChild = state.perspective === "child";
+    const arText = (isChild && q.ar_child) ? q.ar_child : (q.ar_self || q.ar);
+    qTitle.innerText = lang==="ar" ? arText : (q.en || arText);
+    qBlock.appendChild(qTitle);
+
+    if(tool.type === "likert6" || tool.type === "likert5"){
+      const scaleCount = tool.type === "likert6" ? 6 : 5;
+      const row = document.createElement("div");
+      row.className = "likert";
+      for(let v=1; v<=scaleCount; v++){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.innerText = v;
+        if(state.answers[q.id] === v) b.classList.add("sel");
+        b.onclick = ()=>{ state.answers[q.id] = v; renderCurrentChunk(); updateOverallProgress(); };
+        row.appendChild(b);
+      }
+      qBlock.appendChild(row);
+    } else if(tool.type === "yesno"){
+      const row = document.createElement("div");
+      row.className = "yesno";
+      ["yes","no"].forEach(val=>{
+        const b = document.createElement("button");
+        b.type = "button";
+        b.innerText = lang==="ar" ? (val==="yes"?tool.yes_label_ar:tool.no_label_ar) : (val==="yes"?tool.yes_label_en:tool.no_label_en);
+        if(state.answers[q.id] === val) b.classList.add("sel");
+        b.onclick = ()=>{ state.answers[q.id] = val; renderCurrentChunk(); updateOverallProgress(); };
+        row.appendChild(b);
+      });
+      qBlock.appendChild(row);
+    } else if(tool.type === "opentext"){
+      const ta = document.createElement("textarea");
+      ta.value = state.answers[q.id] || "";
+      ta.oninput = (e)=>{ state.answers[q.id] = e.target.value; updateOverallProgress(); };
+      qBlock.appendChild(ta);
+    }
+
+    container.appendChild(qBlock);
+  });
+
+  const isVeryLastChunk = (state.toolIndex === seq.length-1) && (state.chunkIndex === chunks.length-1);
+  document.getElementById("toolNextBtn").innerText = isVeryLastChunk ? T[lang].submit : T[lang].next;
+
+  updateOverallProgress();
+}
+
+function isCurrentChunkComplete(){
+  const tool = currentTool();
+  return currentChunk().questions.every(q=>{
+    if(tool.type === "opentext") return true;
+    return state.answers[q.id] !== undefined;
+  });
+}
+
+function prevChunk(){
+  if(state.chunkIndex === 0){
+    if(state.toolIndex === 0){ goToStep(2); return; }
+    state.toolIndex -= 1;
+    state.chunkIndex = currentChunks().length - 1;
+  } else {
+    state.chunkIndex -= 1;
+  }
+  goToStep(3);
+  renderCurrentChunk();
+}
+
+/* ================== MILESTONE / REWARD LOGIC ================== */
+const REWARD_BADGES = ["🎉","⭐","🚀","🔥","💪","🏅"];
+function rewardMessage(pct, isToolComplete, isFinal){
+  if(isFinal){
+    return {
+      ar:"وصلت للنهاية! خطوة أخيرة وسنكون جاهزين لجلستك.",
+      en:"You've reached the end! One last step and we'll be ready for your session."
+    };
+  }
+  if(isToolComplete){
+    return {
+      ar:"عمل رائع، أنهيت هذا الجزء بالكامل!",
+      en:"Great work — you completed this whole section!"
+    };
+  }
+  if(pct < 30) return {ar:"بداية قوية، استمر!", en:"Strong start — keep going!"};
+  if(pct < 60) return {ar:"أنت في منتصف الطريق تقريبًا.", en:"You're getting close to the halfway point."};
+  if(pct < 90) return {ar:"تبقى القليل فقط، أنت قريب جدًا.", en:"Just a little more — you're almost there."};
+  return {ar:"على وشك الانتهاء تمامًا!", en:"Almost completely done!"};
+}
+
+function onChunkNext(){
+  if(!isCurrentChunkComplete()){
+    document.getElementById("unansweredNote").style.display = "block";
+    return;
+  }
+  const seq = getToolSequence();
+  const chunks = currentChunks();
+  const isLastChunkOfTool = state.chunkIndex === chunks.length - 1;
+  const isLastToolOverall = state.toolIndex === seq.length - 1;
+
+  state.pendingTransition = {
+    toolComplete: isLastChunkOfTool,
+    final: isLastChunkOfTool && isLastToolOverall
+  };
+  showMilestoneScreen();
+}
+
+function showMilestoneScreen(){
+  showOnly("stepMilestone");
+  renderMilestoneScreen();
+}
+
+function renderMilestoneScreen(){
+  const {pct} = updateOverallProgress();
+  const trans = state.pendingTransition || {};
+  const msg = rewardMessage(pct, trans.toolComplete && !trans.final, trans.final);
+  const badge = trans.final ? "🏁" : REWARD_BADGES[Math.floor(Math.random()*REWARD_BADGES.length)];
+
+  document.getElementById("milestoneBadge").innerText = badge;
+  document.getElementById("milestoneTitle").innerText = trans.final
+    ? (lang==="ar" ? "وصلت للنهاية!" : "You made it to the end!")
+    : (trans.toolComplete
+        ? (lang==="ar" ? "أحسنت، خلصت هذا الجزء!" : "Nice — that section is done!")
+        : (lang==="ar" ? "أحسنت!" : "Nice work!"));
+  document.getElementById("milestoneMsg").innerText = lang==="ar" ? msg.ar : msg.en;
+  document.getElementById("milestoneBarFill").style.width = pct + "%";
+  document.getElementById("milestonePercent").innerText = pct + "%";
+
+  document.getElementById("milestoneContinueBtn").innerText = trans.final ? T[lang].submit : T[lang].next;
+}
+
+function advanceAfterMilestone(){
+  const trans = state.pendingTransition || {};
+  if(trans.final){
+    submitAll();
+    return;
+  }
+  if(trans.toolComplete){
+    state.toolIndex += 1;
+    state.chunkIndex = 0;
+  } else {
+    state.chunkIndex += 1;
+  }
+  state.pendingTransition = null;
+  goToStep(3);
+  renderCurrentChunk();
+}
+
+/* ================== SCORING SUMMARY ================== */
+function buildSummary(){
+  const seq = getToolSequence();
+  const lines = [];
+  const scored = {};
+
+  if(seq.includes("dsm")){
+    const inCount = TOOLS.dsm.questions.filter(q=>q.domain==="inattention" && state.answers[q.id]==="yes").length;
+    const hyCount = TOOLS.dsm.questions.filter(q=>q.domain==="hyperactivity" && state.answers[q.id]==="yes").length;
+    scored.dsm = {inattention: inCount, hyperactivity: hyCount};
+    lines.push("DSM-IV ADHD Screen — Inattention: " + inCount + "/9, Hyperactivity: " + hyCount + "/9");
+  }
+  if(seq.includes("hyperarousal")){
+    const yesCount = TOOLS.hyperarousal.questions.filter(q=>state.answers[q.id]==="yes").length;
+    scored.hyperarousal = {yes: yesCount, total: TOOLS.hyperarousal.questions.length};
+    lines.push("Emotional Hyperarousal — " + yesCount + "/" + TOOLS.hyperarousal.questions.length + " yes");
+  }
+  if(seq.includes("ef")){
+    const domainScores = {};
+    TOOLS.ef.questions.forEach(q=>{
+      domainScores[q.domain] = (domainScores[q.domain]||0) + (state.answers[q.id]||0);
+    });
+    scored.ef = {};
+    const parts = [];
+    Object.keys(domainScores).forEach(d=>{
+      const band = efBand(domainScores[d]);
+      scored.ef[d] = {score: domainScores[d], band: band.en};
+      parts.push(EF_DOMAIN_LABELS_AR[d] + ": " + domainScores[d] + "/18 (" + band.en + ")");
+    });
+    lines.push("Executive Function — " + parts.join(" | "));
+  }
+  if(seq.includes("ei")){
+    const domainScores = {};
+    TOOLS.ei.questions.forEach(q=>{
+      domainScores[q.domain] = (domainScores[q.domain]||0) + (state.answers[q.id]||0);
+    });
+    scored.ei = {};
+    const parts = [];
+    Object.keys(domainScores).forEach(d=>{
+      const band = eiBand(domainScores[d]);
+      scored.ei[d] = {score: domainScores[d], band: band.en};
+      parts.push(EI_DOMAIN_LABELS_AR[d] + ": " + domainScores[d] + "/50 (" + band.en + ")");
+    });
+    lines.push("Emotional Intelligence — " + parts.join(" | "));
+  }
+  if(seq.includes("strengths")){
+    lines.push("Strengths questionnaire — open-text answers recorded, see full data.");
+  }
+
+  return { summaryText: lines.join("\n"), scored: scored };
+}
+
+/* ================== SUBMIT ================== */
+function submitAll(){
+  const summary = buildSummary();
+  const payload = {
+    type: "assessment_submission",
+    perspective: state.perspective,
+    fullName: state.fullName,
+    childName: state.perspective === "child" ? state.childName : "",
+    email: state.email,
+    diagnosed: state.diagnosed,
+    contractAgreed: state.agree,
+    toolsCompleted: getToolSequence(),
+    rawAnswers: state.answers,
+    scored: summary.scored,
+    summaryText: summary.summaryText,
+    submittedAt: new Date().toISOString()
+  };
+
+  const btn = document.getElementById("milestoneContinueBtn");
+  btn.disabled = true;
+  btn.innerText = lang === "ar" ? "جارٍ الإرسال..." : "Submitting...";
+
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    showOnly("stepDone");
+    document.getElementById("overallTrack").classList.add("hidden");
+  }).catch(()=>{
+    alert(lang === "ar" ? "حدث خطأ أثناء الإرسال. حاول مرة أخرى." : "Something went wrong sending this. Please try again.");
+    btn.disabled = false;
+    btn.innerText = T[lang].submit;
+  });
+}
+
+applyLang();
+</script>
+</body>
+</html>
