@@ -239,6 +239,17 @@ function setState(msg, isError){
   el.classList.toggle("error", !!isError);
 }
 
+// Auto-fill + auto-load if the coach notification email link included ?email=
+(function initFromUrl(){
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get("email");
+  if(email){
+    document.getElementById("lookupEmail").value = decodeURIComponent(email);
+    window.addEventListener("DOMContentLoaded", loadResults);
+    if(document.readyState !== "loading") loadResults();
+  }
+})();
+
 function loadResults(){
   const email = document.getElementById("lookupEmail").value.trim();
   if(!email){ setState("فضلاً أدخل بريد العميل الإلكتروني.", true); return; }
