@@ -69,6 +69,7 @@
   .domain-row{margin-bottom:14px;}
   .domain-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;}
   .domain-name{font-size:13.5px; font-weight:700;}
+  .domain-desc{font-size:12px; color:var(--navy-light); margin-bottom:6px; line-height:1.6;}
   .domain-band{font-size:11.5px; font-weight:700; padding:2px 10px; border-radius:100px;}
   .band-strength{background:var(--green-tint); color:var(--green-deep);}
   .band-good{background:#EAF2FB; color:#2456A6;}
@@ -76,6 +77,15 @@
   .band-priority{background:#FBEAE6; color:#B3411F;}
   .domain-track{height:8px; background:var(--line); border-radius:6px; overflow:hidden;}
   .domain-fill{height:100%; border-radius:6px;}
+
+  .focus-list{margin-bottom:4px;}
+  .focus-heading{font-size:12px; font-weight:700; color:var(--navy-light); margin-bottom:8px; text-transform:uppercase; letter-spacing:.04em;}
+  .focus-item{display:flex; gap:10px; align-items:flex-start; padding:8px 0;}
+  .focus-item .dot{width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0;}
+  .focus-item .dot.strength{background:var(--green);}
+  .focus-item .dot.priority{background:var(--gold);}
+  .focus-item .txt b{display:block; font-size:13.5px;}
+  .focus-item .txt span{font-size:12px; color:var(--navy-light);}
 
   .strength-item{border-bottom:1px solid var(--line); padding:12px 0;}
   .strength-item:last-child{border-bottom:none;}
@@ -121,21 +131,31 @@
       <strong>تذكير: </strong>هذه النتائج ليست تشخيصًا رسميًا. الهدف منها فهم أسلوب تفكير العميل وتحدياته لتصميم جلسات تدريب مناسبة — وليس تصنيفه أو الحكم عليه.
     </div>
 
+    <div class="card hidden" id="focusCard">
+      <div class="section-label">ملخص</div>
+      <div class="section-title">أين نبدأ؟</div>
+      <div class="section-sub">مبني تلقائيًا على النتائج أدناه — نقطة انطلاق للمحادثة، وليست الكلمة الأخيرة.</div>
+      <div id="focusStrengths" style="margin-bottom:14px;"></div>
+      <div id="focusPriorities"></div>
+    </div>
+
     <div class="card hidden" id="dsmCard">
-      <div class="section-label">فحص أولي</div>
-      <div class="section-title">مقياس قصور الانتباه / فرط النشاط (DSM-IV)</div>
-      <div class="section-sub">فحص أولي غير تشخيصي — يساعد على تحديد ما إذا كانت أنماط ADHD مناسبة كإطار للجلسات.</div>
+      <div class="section-label">فحص أولي · DSM-IV</div>
+      <div class="section-title">مقياس قصور الانتباه / فرط النشاط</div>
+      <div class="section-sub">فحص أولي غير تشخيصي، مبني على معايير الدليل التشخيصي DSM-IV. يساعد على تحديد ما إذا كانت أنماط ADHD إطارًا مناسبًا للجلسات.</div>
       <div class="stat-row">
         <div class="stat-box"><div class="num" id="dsmInattention">-</div><div class="lbl">قصور الانتباه (من ٩)</div></div>
         <div class="stat-box"><div class="num" id="dsmHyperactivity">-</div><div class="lbl">فرط النشاط (من ٩)</div></div>
       </div>
-      <div class="stat-note" id="dsmNote"></div>
+      <div class="stat-note" id="dsmNoteInattention"></div>
+      <div class="stat-note" id="dsmNoteHyperactivity" style="margin-top:8px;"></div>
+      <div class="stat-note" id="dsmNoteThreshold" style="margin-top:8px; background:var(--green-tint); color:var(--green-deep);"></div>
     </div>
 
     <div class="card hidden" id="haCard">
       <div class="section-label">فحص أولي</div>
       <div class="section-title">اختبار فرط الإثارة العاطفية</div>
-      <div class="section-sub">يقيس شدة الاستجابة العاطفية والحساسية تجاه الرفض والنقد.</div>
+      <div class="section-sub">يقيس شدة الاستجابة العاطفية، الحساسية تجاه الرفض والنقد، وصعوبة الهدوء بعد الانفعال — أنماط مرتبطة غالبًا بـADHD.</div>
       <div class="stat-row">
         <div class="stat-box"><div class="num" id="haCount">-</div><div class="lbl">من ١٧ سؤال</div></div>
       </div>
@@ -145,7 +165,7 @@
     <div class="card hidden" id="efCard">
       <div class="section-label">الوظائف التنفيذية</div>
       <div class="section-title">نقاط القوة ومجالات النمو</div>
-      <div class="section-sub">كل مجال أدناه نقطة انطلاق لمحادثة التدريب — ليس حكمًا نهائيًا.</div>
+      <div class="section-sub">١٢ مهارة تنفيذية، كل واحدة نقطة انطلاق لمحادثة التدريب. البنود ٣-٨ تحتاج استراتيجيات تعويضية، ٩-١١ تحتاج انتباهًا وجهدًا، ١٢-١٤ جيدة لكن قد تتأثر بالضغط، ١٥-١٨ ممتازة وتعمل تلقائيًا (وفق مفتاح تقييم المقياس الأصلي).</div>
       <div id="efDomains"></div>
     </div>
 
@@ -162,6 +182,7 @@
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdv6TJnqpfkf94zeY3MIePkCyaaTcbmmxSSh9_MWAfMduEt7dfvMZB4nfMDINtWaCVvA/exec";
 
+
 const EF_DOMAIN_LABELS_AR = {
   "self_control":"ضبط رد الفعل / التحكم في الذات",
   "working_memory":"الذاكرة العاملة",
@@ -175,6 +196,20 @@ const EF_DOMAIN_LABELS_AR = {
   "metacognition":"ما وراء المعرفة",
   "goal_persistence":"المثابرة لتحقيق الأهداف",
   "stress_tolerance":"تحمل القلق / الإجهاد"
+};
+const EF_DOMAIN_DESC_AR = {
+  "self_control":"القدرة على التفكير قبل التصرف، بدل الاندفاع لرد فعل سريع.",
+  "working_memory":"القدرة على تذكر الحقائق والالتزامات والاحتفاظ بها أثناء العمل.",
+  "emotion_regulation":"القدرة على إدارة المشاعر بحيث لا تعيق الأداء والتركيز.",
+  "task_initiation":"القدرة على البدء بالمهام في وقتها دون تسويف.",
+  "sustained_attention":"القدرة على الاستمرار بالتركيز حتى إنهاء المهمة، حتى مع المقاطعات.",
+  "planning_prioritizing":"القدرة على وضع خطة واضحة وترتيب الأهم فالمهم.",
+  "organization":"القدرة على الحفاظ على مساحة العمل والأغراض منظمة.",
+  "time_management":"القدرة على تقدير الوقت اللازم للمهام والالتزام بالمواعيد.",
+  "flexibility":"القدرة على التكيف بسهولة مع تغير الخطط أو المفاجآت.",
+  "metacognition":"القدرة على مراقبة أدائك الخاص وتطوير أساليب لتحسينه.",
+  "goal_persistence":"القدرة على الاستمرار نحو أهداف بعيدة المدى رغم المغريات الفورية.",
+  "stress_tolerance":"القدرة على الأداء الجيد تحت الضغط والمواعيد الحرجة."
 };
 const EF_DOMAIN_ORDER = ["self_control","working_memory","emotion_regulation","task_initiation","sustained_attention","planning_prioritizing","organization","time_management","flexibility","metacognition","goal_persistence","stress_tolerance"];
 
@@ -191,10 +226,10 @@ const STRENGTHS_QUESTIONS = [
 ];
 
 function efBand(score){
-  if(score <= 8) return {label:"أولوية للتطوير في الجلسات", cls:"band-priority", fill:"#B3411F"};
-  if(score <= 11) return {label:"مجال للنمو", cls:"band-growth", fill:"#FFB627"};
-  if(score <= 14) return {label:"قوة جيدة، قد تتأثر بالضغط", cls:"band-good", fill:"#2456A6"};
-  return {label:"نقطة قوة راسخة", cls:"band-strength", fill:"#284635"};
+  if(score <= 8) return {label:"يحتاج استراتيجيات تعويضية", cls:"band-priority", fill:"#B3411F"};
+  if(score <= 11) return {label:"يحتاج انتباهًا وجهدًا", cls:"band-growth", fill:"#FFB627"};
+  if(score <= 14) return {label:"جيد، قد يتأثر بالضغط", cls:"band-good", fill:"#2456A6"};
+  return {label:"ممتاز، يعمل تلقائيًا", cls:"band-strength", fill:"#284635"};
 }
 
 function setState(msg, isError){
@@ -249,28 +284,38 @@ function renderResults(row){
   metaLines.push("الحالة: " + (row["Status"] || "—"));
   document.getElementById("rClientMeta").innerHTML = metaLines.join(" · ");
 
-  // DSM-IV
+  // DSM-IV — uses the standard DSM-IV clinical threshold: 6+ of 9 symptoms in
+  // a domain is the recognized cutoff for children (5+ of 9 for ages 17+).
   if(scored.dsm){
     document.getElementById("dsmCard").classList.remove("hidden");
-    document.getElementById("dsmInattention").textContent = scored.dsm.inattention + "/9";
-    document.getElementById("dsmHyperactivity").textContent = scored.dsm.hyperactivity + "/9";
-    const total = scored.dsm.inattention + scored.dsm.hyperactivity;
-    let note;
-    if(total <= 4) note = "عدد العلامات الظاهرة محدود. يمكن أن تكون الجلسات مركزة على أهداف عامة بدل التركيز حصرًا على أنماط ADHD.";
-    else if(total <= 10) note = "هناك عدد ملحوظ من العلامات المرتبطة بـADHD تستحق أن تكون جزءًا من محادثة الأهداف في جلسة الاستقبال.";
-    else note = "عدد كبير من العلامات ظاهر عبر المقياسين. يستحسن مناقشة هذا بوضوح مع العميل، مع التذكير بأن الفحص وحده لا يشخّص.";
-    document.getElementById("dsmNote").textContent = note;
+    const inatt = scored.dsm.inattention, hyp = scored.dsm.hyperactivity;
+    document.getElementById("dsmInattention").textContent = inatt + "/9";
+    document.getElementById("dsmHyperactivity").textContent = hyp + "/9";
+
+    document.getElementById("dsmNoteInattention").textContent =
+      "قصور الانتباه: يقيس صعوبة التركيز على التفاصيل، تنظيم المهام، ومتابعة التعليمات والالتزامات اليومية. " +
+      (inatt >= 6 ? "العدد الحالي (" + inatt + "/9) عند أو فوق العتبة المعتادة (٦ من ٩) التي تشير عادة إلى نمط ملحوظ يستحق نقاشًا مباشرًا."
+                  : "العدد الحالي (" + inatt + "/9) دون العتبة المعتادة (٦ من ٩) — لا يعني غياب الصعوبة، لكنها أقل بروزًا هنا.");
+
+    document.getElementById("dsmNoteHyperactivity").textContent =
+      "فرط النشاط/الاندفاعية: يقيس الحركة الزائدة، صعوبة الانتظار، والتسرع في الأفعال أو الكلام. " +
+      (hyp >= 6 ? "العدد الحالي (" + hyp + "/9) عند أو فوق العتبة المعتادة (٦ من ٩)."
+                : "العدد الحالي (" + hyp + "/9) دون العتبة المعتادة (٦ من ٩).");
+
+    document.getElementById("dsmNoteThreshold").textContent =
+      "ملاحظة مرجعية: وفق الدليل التشخيصي DSM-IV، يُعتبر ٦ أعراض أو أكثر من ٩ في أي من المقياسين عتبة معتادة للدلالة (٥ أو أكثر للأعمار ١٧ فما فوق) — هذا مرجع فحص أولي فقط، وليس تشخيصًا بحد ذاته.";
   }
 
-  // Hyperarousal
+  // Hyperarousal — no official numeric cutoff given in the source instrument,
+  // so this stays proportion-based rather than claiming a false clinical threshold.
   if(scored.hyperarousal){
     document.getElementById("haCard").classList.remove("hidden");
-    document.getElementById("haCount").textContent = scored.hyperarousal.yes + "/" + scored.hyperarousal.total;
-    const y = scored.hyperarousal.yes;
+    const y = scored.hyperarousal.yes, total = scored.hyperarousal.total;
+    document.getElementById("haCount").textContent = y + "/" + total;
     let note;
-    if(y <= 5) note = "مستوى منخفض نسبيًا من فرط الإثارة العاطفية.";
-    else if(y <= 11) note = "مستوى متوسط — إدارة الانفعال قد تكون محورًا مفيدًا في بعض الجلسات.";
-    else note = "مستوى مرتفع — إدارة الانفعال والحساسية تجاه الرفض تستحق أن تكون محورًا أساسيًا في خطة التدريب.";
+    if(y <= 5) note = "عدد محدود من العلامات — فرط الإثارة العاطفية لا يبدو محورًا رئيسيًا حاليًا.";
+    else if(y <= 11) note = "عدد متوسط من العلامات — إدارة الانفعال والحساسية تجاه النقد قد تستحق مساحة في بعض الجلسات.";
+    else note = "عدد مرتفع من العلامات — التنظيم العاطفي والحساسية تجاه الرفض يستحقان أن يكونا محورًا أساسيًا في خطة التدريب، لا مجرد ملاحظة جانبية.";
     document.getElementById("haNote").textContent = note;
   }
 
@@ -279,9 +324,11 @@ function renderResults(row){
     document.getElementById("efCard").classList.remove("hidden");
     const container = document.getElementById("efDomains");
     container.innerHTML = "";
+    const domainScores = [];
     EF_DOMAIN_ORDER.forEach(d => {
       const entry = scored.ef[d];
       if(!entry) return;
+      domainScores.push({ id: d, score: entry.score });
       const band = efBand(entry.score);
       const pct = Math.round((entry.score / 18) * 100);
       const row = document.createElement("div");
@@ -291,9 +338,27 @@ function renderResults(row){
           '<span class="domain-name">' + EF_DOMAIN_LABELS_AR[d] + '</span>' +
           '<span class="domain-band ' + band.cls + '">' + band.label + ' · ' + entry.score + '/18</span>' +
         '</div>' +
+        '<div class="domain-desc">' + EF_DOMAIN_DESC_AR[d] + '</div>' +
         '<div class="domain-track"><div class="domain-fill" style="width:' + pct + '%; background:' + band.fill + ';"></div></div>';
       container.appendChild(row);
     });
+
+    // Coaching focus summary — mirrors the source instrument's own design (it ends
+    // with a "weakest skills / strongest skills" table), just computed automatically.
+    const sorted = domainScores.slice().sort((a,b) => b.score - a.score);
+    const topStrengths = sorted.slice(0, 3);
+    const topPriorities = sorted.slice(-3).reverse();
+
+    const strengthsHtml = '<div class="focus-heading">أبرز نقاط القوة</div>' + topStrengths.map(d =>
+      '<div class="focus-item"><div class="dot strength"></div><div class="txt"><b>' + EF_DOMAIN_LABELS_AR[d.id] + ' (' + d.score + '/18)</b><span>' + EF_DOMAIN_DESC_AR[d.id] + '</span></div></div>'
+    ).join("");
+    const prioritiesHtml = '<div class="focus-heading">أولويات للعمل عليها</div>' + topPriorities.map(d =>
+      '<div class="focus-item"><div class="dot priority"></div><div class="txt"><b>' + EF_DOMAIN_LABELS_AR[d.id] + ' (' + d.score + '/18)</b><span>' + EF_DOMAIN_DESC_AR[d.id] + '</span></div></div>'
+    ).join("");
+
+    document.getElementById("focusStrengths").innerHTML = strengthsHtml;
+    document.getElementById("focusPriorities").innerHTML = prioritiesHtml;
+    document.getElementById("focusCard").classList.remove("hidden");
   }
 
   // Strengths
