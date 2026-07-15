@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADHD World — احجز جلستك</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --navy:#1a1a2e; --green:#a8d8b9; --gold:#FFB627; --cream:#F7F4EE; --navy-mid:#3d3d55; --navy-light:#5a5a6e; --navy-pale:#c7c7d6; --white:#ffffff; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Poppins',sans-serif; background:var(--cream); color:var(--navy); }
+    .lp { max-width:720px; margin:0 auto; }
+    .hero { background:var(--navy); padding:3.5rem 2rem 2.5rem; text-align:center; position:relative; overflow:hidden; }
+    .logo-mark { margin-bottom:1.5rem; }
+    .hero-badge { display:inline-block; background:rgba(168,216,185,0.12); color:var(--green); font-family:'Cairo',sans-serif; font-size:14px; font-weight:600; padding:6px 16px; border-radius:100px; margin-bottom:1.2rem; border:1px solid rgba(168,216,185,0.25); }
+    .hero h1 { font-family:'Cairo',sans-serif; font-weight:900; font-size:32px; color:var(--cream); line-height:1.35; margin-bottom:0.6rem; direction:rtl; }
+    .hero h1 span { color:var(--green); }
+    .hero-sub { font-size:14px; color:var(--navy-pale); line-height:1.8; max-width:500px; margin:0 auto 2rem; font-family:'Cairo',sans-serif; direction:rtl; }
+    .countdown-banner { background:linear-gradient(135deg,rgba(255,182,39,0.15),rgba(255,182,39,0.05)); border:1px solid rgba(255,182,39,0.3); border-radius:16px; padding:1.2rem 1.5rem; margin-bottom:1.5rem; }
+    .countdown-label { font-family:'Cairo',sans-serif; font-size:13px; color:var(--gold); font-weight:700; margin-bottom:0.8rem; }
+    .countdown-timer { display:flex; justify-content:center; gap:12px; direction:ltr; }
+    .countdown-unit { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .countdown-num { background:var(--navy-mid); color:var(--gold); font-family:'Poppins',sans-serif; font-weight:800; font-size:28px; width:60px; height:60px; display:flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid rgba(255,182,39,0.2); }
+    .countdown-sep { color:var(--gold); font-size:24px; font-weight:800; padding-top:8px; }
+    .countdown-text { font-size:10px; color:var(--navy-pale); font-family:'Cairo',sans-serif; font-weight:600; }
+    .currency-bar { background:#13132a; padding:10px 2rem; display:flex; align-items:center; justify-content:center; gap:10px; }
+    .currency-bar label { font-size:12px; color:var(--navy-pale); font-family:'Cairo',sans-serif; }
+    .currency-bar select { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:5px 10px; font-size:13px; font-family:'Cairo',sans-serif; color:var(--cream); cursor:pointer; outline:none; }
+    .section { padding:2.5rem 2rem; background:var(--cream); }
+    .section-label { font-size:11px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--green); background:var(--navy); display:inline-block; padding:4px 12px; border-radius:100px; margin-bottom:0.8rem; font-family:'Poppins',sans-serif; }
+    .section-title { font-family:'Cairo',sans-serif; font-weight:800; font-size:22px; color:var(--navy); margin-bottom:0.4rem; }
+    .section-sub { font-size:13px; color:var(--navy-light); margin-bottom:1.5rem; font-family:'Cairo',sans-serif; direction:rtl; }
+    .free-offer-box { background:var(--navy); border-radius:16px; padding:1.5rem; margin-bottom:2rem; text-align:center; }
+    .free-offer-tag { display:inline-block; background:var(--gold); color:var(--navy); font-family:'Cairo',sans-serif; font-weight:800; font-size:12px; padding:3px 12px; border-radius:100px; margin-bottom:0.6rem; }
+    .free-offer-title { font-family:'Cairo',sans-serif; font-weight:900; font-size:20px; color:var(--cream); margin-bottom:0.4rem; }
+    .free-offer-sub { font-size:13px; color:var(--navy-pale); font-family:'Cairo',sans-serif; }
+    .packages { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:1.5rem; }
+    .pkg-single { grid-column:1 / -1; }
+    .pkg { background:var(--white); border:1.5px solid #e5e2dc; border-radius:16px; padding:1.2rem; text-align:center; cursor:pointer; transition:all 0.15s; position:relative; }
+    .pkg:hover { border-color:var(--green); transform:translateY(-2px); box-shadow:0 4px 16px rgba(26,26,46,0.08); }
+    .pkg.featured { border-color:var(--navy); }
+    .pkg.free-pkg { border-color:var(--gold); background:linear-gradient(135deg,#fffdf5,#fff); }
+    .pkg.selected { border-color:var(--navy); box-shadow:0 0 0 3px rgba(26,26,46,0.1); }
+    .pkg-badge { position:absolute; top:-11px; right:50%; transform:translateX(50%); font-size:11px; font-family:'Cairo',sans-serif; font-weight:700; padding:2px 12px; border-radius:100px; white-space:nowrap; }
+    .pkg-badge.popular { background:var(--navy); color:var(--cream); }
+    .pkg-badge.free-badge { background:var(--gold); color:var(--navy); }
+    .pkg-name { font-family:'Cairo',sans-serif; font-size:13px; color:var(--navy-light); margin-bottom:4px; font-weight:600; }
+    .pkg-sessions { font-family:'Cairo',sans-serif; font-size:26px; font-weight:900; color:var(--navy); line-height:1; margin-bottom:2px; }
+    .pkg-sessions span { font-size:13px; font-weight:500; color:var(--navy-light); }
+    .pkg-breakdown { font-size:11px; color:var(--navy-light); margin-bottom:8px; line-height:1.7; font-family:'Cairo',sans-serif; }
+    .pkg-breakdown b { color:#1a7a4a; font-weight:700; }
+    .free-highlight { color:var(--gold); font-weight:700; }
+    .pkg-value { font-size:11px; color:#bbb; text-decoration:line-through; font-family:'Poppins',sans-serif; }
+    .pkg-total { font-size:20px; font-weight:800; color:var(--navy); font-family:'Poppins',sans-serif; }
+    .pkg-total.free-price { color:var(--gold); }
+    .pkg-total-sym { font-size:11px; font-weight:500; color:var(--navy-light); }
+    .pkg-note { font-size:10px; color:var(--navy-pale); margin-top:4px; font-family:'Cairo',sans-serif; }
+    .intake-box { background:var(--white); border:1.5px solid var(--green); border-radius:16px; padding:1.2rem 1.5rem; margin-bottom:2rem; display:flex; align-items:center; gap:1rem; }
+    .intake-icon { width:44px; height:44px; background:rgba(168,216,185,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .intake-content { flex:1; direction:rtl; }
+    .intake-title { font-family:'Cairo',sans-serif; font-weight:800; font-size:14px; color:var(--navy); margin-bottom:2px; }
+    .intake-desc { font-size:12px; color:var(--navy-light); font-family:'Cairo',sans-serif; }
+    .intake-tag { background:var(--green); color:var(--navy); font-size:11px; font-weight:700; font-family:'Cairo',sans-serif; padding:3px 10px; border-radius:100px; flex-shrink:0; }
+    .form-section { background:var(--white); border-radius:20px; padding:1.8rem; border:1.5px solid #e5e2dc; }
+    .form-title { font-family:'Cairo',sans-serif; font-weight:800; font-size:17px; margin-bottom:0.3rem; color:var(--navy); direction:rtl; }
+    .form-sub { font-size:12px; color:var(--navy-light); margin-bottom:1.2rem; font-family:'Cairo',sans-serif; direction:rtl; }
+    .field { margin-bottom:12px; }
+    .field label { display:block; font-size:12px; color:var(--navy-mid); margin-bottom:5px; font-family:'Cairo',sans-serif; font-weight:600; }
+    .field input,.field select,.field textarea { width:100%; background:var(--cream); border:1.5px solid #e5e2dc; border-radius:10px; padding:10px 14px; font-size:14px; font-family:'Cairo',sans-serif; color:var(--navy); direction:rtl; outline:none; }
+    .field input:focus,.field select:focus,.field textarea:focus { border-color:var(--navy); }
+    .field textarea { height:80px; resize:none; }
+    .submit-btn { width:100%; background:var(--navy); color:var(--cream); border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:800; font-family:'Cairo',sans-serif; cursor:pointer; margin-top:6px; transition:opacity 0.15s; }
+    .submit-btn:hover { opacity:0.88; }
+    .success-msg { display:none; background:#e8f5ef; border:1.5px solid var(--green); border-radius:16px; padding:2rem; text-align:center; }
+    .success-msg p { font-family:'Cairo',sans-serif; color:#1a7a4a; font-size:16px; font-weight:800; }
+    .success-msg span { font-size:13px; color:#2a9a5a; display:block; margin-top:6px; font-family:'Cairo',sans-serif; }
+    .why-section { padding:2.5rem 2rem; background:var(--white); }
+    .why-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:1rem; }
+    .why-card { background:var(--cream); border:1px solid #e5e2dc; border-radius:16px; padding:1.2rem; }
+    .why-dot { width:8px; height:8px; background:var(--gold); border-radius:50%; margin-bottom:8px; }
+    .why-title { font-family:'Cairo',sans-serif; font-size:13px; font-weight:800; color:var(--navy); margin-bottom:4px; }
+    .why-desc { font-size:12px; color:var(--navy-light); line-height:1.6; font-family:'Cairo',sans-serif; direction:rtl; }
+    .footer { text-align:center; padding:1.5rem 2rem; font-size:11px; color:var(--navy-pale); background:var(--navy); font-family:'Poppins',sans-serif; }
+    .footer span { color:var(--green); }
+    @media (max-width:480px) { .packages{grid-template-columns:1fr} .pkg-single{grid-column:1} .why-grid{grid-template-columns:1fr} .hero h1{font-size:26px} .countdown-num{width:50px;height:50px;font-size:22px} }
+  </style>
+</head>
+<body>
+<div class="lp">
+  <div class="hero">
+    <div class="logo-mark">
+      <svg width="140" height="96" viewBox="-10 0 170 110">
+        <path d="M12,50 C -4,42 -2,14 20,16 C 44,18 42,48 20,48 C 4,48 4,66 24,64 C 48,62 30,28 54,28 C 70,28 70,46 54,48 C 46,49 50,58 62,52 C 82,42 90,54 110,42 C 128,32 138,55 150,40" fill="none" stroke="#F7F4EE" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="150" cy="40" r="6" fill="#FFB627"/>
+      </svg>
+    </div>
+    <div class="hero-badge">تعلم كيف تتحكم في قوى عقلك الخارقة ✦</div>
+    <h1>احجز جلستك مع مدرب <span>ADHD</span> متخصص</h1>
+    <p class="hero-sub">نفس المدرب، نفس المنهجية — مدربونا في رحلة التدريب نحو شهادة دولية، وأنت تستفيد بجلسات مجانية على حسابنا.</p>
+    <div class="countdown-banner">
+      <div class="countdown-label">⚡ عرض الإطلاق — كل الجلسات مجانية لمدة 30 يوم</div>
+      <div class="countdown-timer">
+        <div class="countdown-unit"><div class="countdown-num" id="cd-days">30</div><div class="countdown-text">يوم</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-text">ساعة</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-text">دقيقة</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-text">ثانية</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="currency-bar">
+    <label>العملة:</label>
+    <select id="currency-select" onchange="updateCurrency()">
+      <option value="KD">🇰🇼 دينار كويتي (KD)</option>
+      <option value="SAR">🇸🇦 ريال سعودي (SAR)</option>
+      <option value="AED">🇦🇪 درهم إماراتي (AED)</option>
+      <option value="BHD">🇧🇭 دينار بحريني (BHD)</option>
+      <option value="QAR">🇶🇦 ريال قطري (QAR)</option>
+      <option value="OMR">🇴🇲 ريال عماني (OMR)</option>
+      <option value="USD">🌍 دولار أمريكي (USD)</option>
+    </select>
+  </div>
+  <div class="section">
+    <div class="section-label">الباقات</div>
+    <div class="section-title">اختر باقتك</div>
+    <p class="section-sub" id="section-sub">جلسات مدفوعة بسعر ٣٠ د.ك/جلسة — ٥٠٪ مجانية في كل باقة</p>
+    <div class="intake-box">
+      <div class="intake-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a7a4a" stroke-width="2" stroke-linecap="round" width="22" height="22">
+          <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+      <div class="intake-content">
+        <div class="intake-title">جلسة الاستقبال — Intake Session</div>
+        <div class="intake-desc">أول خطوة في رحلتك — تعارف مع مدربك وتحديد أهدافك. مشمولة في جميع الباقات ولا يمكن حجزها بشكل منفصل.</div>
+      </div>
+      <div class="intake-tag">مجانية دائماً</div>
+    </div>
+    <div class="free-offer-box">
+      <div class="free-offer-tag">🎁 عرض الإطلاق — 30 يوم فقط</div>
+      <div class="free-offer-title">باقة Starter كاملاً مجانية</div>
+      <div class="free-offer-sub">خلال فترة الإطلاق، باقة Starter (٥ جلسات شاملة الاستقبال) مجانية بالكامل. بعد انتهاء العرض تعود لسعرها الطبيعي.</div>
+    </div>
+    <div class="packages">
+      <div class="pkg free-pkg pkg-single" onclick="selectPkg(this,'starter')">
+        <div class="pkg-badge free-badge">🎁 مجانية خلال الإطلاق</div>
+        <p class="pkg-name">Starter</p>
+        <p class="pkg-sessions">٥ <span>جلسات</span></p>
+        <div class="pkg-breakdown">جلسة استقبال + <span class="free-highlight">٤ مجانية الآن</span><br>بعد 30 يوم: جلسة استقبال + <b>٢ مجانية</b> + ٢ مدفوعة</div>
+        <p class="pkg-value" id="val-starter"></p>
+        <p class="pkg-total free-price">مجانية الآن 🎁</p>
+        <p class="pkg-note">بعد انتهاء العرض: <span id="starter-future-price">٦٠ د.ك</span></p>
+      </div>
+      <div class="pkg featured" onclick="selectPkg(this,'core')">
+        <div class="pkg-badge popular">الأكثر طلباً</div>
+        <p class="pkg-name">Core</p>
+        <p class="pkg-sessions">٧ <span>جلسات</span></p>
+        <div class="pkg-breakdown">جلسة استقبال + <b>٣ مجانية</b> + ٣ مدفوعة</div>
+        <p class="pkg-value" id="val-core"></p>
+        <p class="pkg-total"><span id="price-core">٩٠</span> <span id="sym-core" class="pkg-total-sym">د.ك</span></p>
+      </div>
+      <div class="pkg" onclick="selectPkg(this,'full')">
+        <p class="pkg-name">Full</p>
+        <p class="pkg-sessions">١١ <span>جلسات</span></p>
+        <div class="pkg-breakdown">جلسة استقبال + <b>٥ مجانية</b> + ٥ مدفوعة</div>
+        <p class="pkg-value" id="val-full"></p>
+        <p class="pkg-total"><span id="price-full">١٥٠</span> <span id="sym-full" class="pkg-total-sym">د.ك</span></p>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-title">سجّل اهتمامك</div>
+      <div class="form-sub">الخطوة التالية: تختار موعدك مباشرة من التقويم</div>
+      <div id="intake-form">
+        <div class="field"><label>الاسم الكريم</label><input type="text" id="f-name" placeholder="اكتب اسمك هنا"/></div>
+        <div class="field"><label>رقم الواتساب</label><input type="tel" id="f-phone" placeholder="+965 XXXX XXXX" dir="ltr" style="text-align:right"/></div>
+        <div class="field"><label>الدولة</label>
+          <select id="f-country">
+            <option value="">اختر دولتك</option>
+            <option value="Kuwait">🇰🇼 الكويت</option>
+            <option value="Saudi Arabia">🇸🇦 السعودية</option>
+            <option value="UAE">🇦🇪 الإمارات</option>
+            <option value="Bahrain">🇧🇭 البحرين</option>
+            <option value="Qatar">🇶🇦 قطر</option>
+            <option value="Oman">🇴🇲 عُمان</option>
+            <option value="Other">🌍 أخرى</option>
+          </select>
+        </div>
+        <div class="field"><label>الباقة المختارة</label>
+          <select id="f-pkg">
+            <option value="">اختر الباقة</option>
+            <option value="starter">Starter — ٥ جلسات (مجانية الآن 🎁)</option>
+            <option value="core">Core — ٧ جلسات ⭐</option>
+            <option value="full">Full — ١١ جلسات</option>
+          </select>
+        </div>
+        <div class="field"><label>ما الذي تريد العمل عليه؟ (اختياري)</label><textarea id="f-goal" placeholder="مثلاً: التنظيم، التركيز، إدارة الوقت..."></textarea></div>
+        <button class="submit-btn" onclick="submitForm()">التالي: اختر موعدك ←</button>
+      </div>
+      <div class="success-msg" id="success-msg">
+        <p>✓ تم استلام بياناتك</p>
+        <span>جارٍ تحويلك لاختيار موعدك...</span>
+      </div>
+    </div>
+  </div>
+  <div class="why-section">
+    <div class="section-label">لماذا ADHD World</div>
+    <div class="section-title">عقلك ليس مكسوراً</div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-dot"></div><p class="why-title">مدربون في مسار شهادة دولية</p><p class="why-desc">يعملون تحت إشراف مباشر من خبراء معتمدين — نفس المنهجية، بسعر أقل.</p></div>
+      <div class="why-card"><div class="why-dot"></div><p class="why-title">عرض مؤقت حقيقي</p><p class="why-desc">السعر المخفض متاح خلال فترة التدريب فقط. من يحجز الآن يحصل على أفضل سعر.</p></div>
+      <div class="why-card"><div class="why-dot"></div><p class="why-title">متخصصون في ADHD</p><p class="why-desc">مش كوتشينج عام — تدريب مصمم خصيصاً لعقل ADHD وطريقة تفكيره.</p></div>
+      <div class="why-card"><div class="why-dot"></div><p class="why-title">بيئة آمنة وسرية</p><p class="why-desc">جلسات أونلاين، بدون أحكام، في وقتك المناسب — من أي مكان في الخليج.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>ADHD World</span> · عالم ADHD · جميع الحقوق محفوظة ٢٠٢٦</div>
+</div>
+<script>
+  const CURRENCIES={KD:{sym:'د.ك',session:30},SAR:{sym:'SAR',session:370},AED:{sym:'AED',session:360},BHD:{sym:'BHD',session:12},QAR:{sym:'QAR',session:340},OMR:{sym:'OMR',session:12},USD:{sym:'USD',session:100}};
+  const PKGS=[{id:'core',paid:3,total:6},{id:'full',paid:5,total:10}];
+  function toAr(n){return n.toString().replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);}
+  function updateCurrency(){
+    const code=document.getElementById('currency-select').value,c=CURRENCIES[code];
+    PKGS.forEach(p=>{
+      document.getElementById('price-'+p.id).textContent=toAr(p.paid*c.session);
+      document.getElementById('sym-'+p.id).textContent=c.sym;
+      document.getElementById('val-'+p.id).textContent='قيمتها '+toAr(p.total*c.session)+' '+c.sym;
+    });
+    document.getElementById('starter-future-price').textContent=toAr(2*c.session)+' '+c.sym;
+    document.getElementById('val-starter').textContent='قيمتها '+toAr(4*c.session)+' '+c.sym;
+    document.getElementById('section-sub').textContent='جلسات مدفوعة بسعر '+toAr(c.session)+' '+c.sym+'/جلسة — ٥٠٪ مجانية في كل باقة';
+  }
+  function selectPkg(el,val){document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');document.getElementById('f-pkg').value=val;}
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdv6TJnqpfkf94zeY3MIePkCyaaTcbmmxSSh9_MWAfMduEt7dfvMZB4nfMDINtWaCVvA/exec";
+  const CALCOM_BOOKING_URL = "https://cal.com/shaban-al-huniti-vbevzn";
+
+  function submitForm(){
+    const name=document.getElementById('f-name').value.trim(),phone=document.getElementById('f-phone').value.trim(),pkg=document.getElementById('f-pkg').value,country=document.getElementById('f-country').value;
+    const goal=document.getElementById('f-goal').value.trim();
+    if(!name||!phone||!pkg||!country){alert('يرجى تعبئة جميع الحقول المطلوبة');return;}
+
+    document.getElementById('intake-form').style.display='none';
+    document.getElementById('success-msg').style.display='block';
+
+    fetch(APPS_SCRIPT_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({ type:'landing_lead', name, phone, country, package: pkg, goal })
+    }).catch(()=>{ /* lead logging is best-effort — don't block the booking redirect on it */ })
+      .finally(()=>{
+        window.location.href = CALCOM_BOOKING_URL + '?name=' + encodeURIComponent(name);
+      });
+  }
+  const LAUNCH_END=new Date(); LAUNCH_END.setDate(LAUNCH_END.getDate()+30);
+  function updateCountdown(){
+    const diff=LAUNCH_END-new Date();
+    if(diff<=0){['days','hours','mins','secs'].forEach(u=>document.getElementById('cd-'+u).textContent='00');return;}
+    document.getElementById('cd-days').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cd-hours').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cd-mins').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cd-secs').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  updateCurrency(); updateCountdown(); setInterval(updateCountdown,1000);
+</script>
+</body>
+</html>
