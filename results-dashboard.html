@@ -39,6 +39,11 @@
   }
   .lookup button:disabled{background:var(--navy-pale); cursor:not-allowed;}
 
+  .btn-primary{
+    background:var(--gold); color:var(--navy); border:none; border-radius:100px;
+    padding:11px 24px; font-weight:700; font-size:14px; font-family:inherit;
+  }
+
   .state-msg{font-size:13px; color:var(--navy-light); margin-bottom:20px; display:none;}
   .state-msg.error{color:#b3411f;}
 
@@ -131,6 +136,13 @@
       <strong>تذكير: </strong>هذه النتائج ليست تشخيصًا رسميًا. الهدف منها فهم أسلوب تفكير العميل وتحدياته لتصميم جلسات تدريب مناسبة — وليس تصنيفه أو الحكم عليه.
     </div>
 
+    <div class="card hidden" id="bookingCard">
+      <div class="section-label">الجلسات القادمة</div>
+      <div class="section-title" id="bookingTitle"></div>
+      <div class="section-sub" id="bookingSub"></div>
+      <a class="btn-primary" id="bookingBtn" href="#" target="_blank" style="display:inline-block; text-decoration:none; text-align:center;">احجز الجلسات المتبقية</a>
+    </div>
+
     <div class="card hidden" id="focusCard">
       <div class="section-label">ملخص</div>
       <div class="section-title">أين نبدأ؟</div>
@@ -182,6 +194,10 @@
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdv6TJnqpfkf94zeY3MIePkCyaaTcbmmxSSh9_MWAfMduEt7dfvMZB4nfMDINtWaCVvA/exec";
 
+
+const CALCOM_COACHING_SESSION_URL = "https://cal.com/shaban-al-huniti-vbevzn/60min";
+const PACKAGE_TOTALS = { starter: 5, core: 7, full: 11 };
+const PACKAGE_LABELS_AR = { starter: "Starter", core: "Core", full: "Full" };
 
 const EF_DOMAIN_LABELS_AR = {
   "self_control":"ضبط رد الفعل / التحكم في الذات",
@@ -294,6 +310,19 @@ function renderResults(row){
   metaLines.push("التشخيص السابق: " + (row["Diagnosis Status"] || "—"));
   metaLines.push("الحالة: " + (row["Status"] || "—"));
   document.getElementById("rClientMeta").innerHTML = metaLines.join(" · ");
+
+  // Booking summary — remaining sessions computed from package (intake already used)
+  const pkg = (row["Package"] || "").toLowerCase();
+  if(PACKAGE_TOTALS[pkg]){
+    const total = PACKAGE_TOTALS[pkg];
+    const remaining = total - 1; // intake counts as session 1
+    const freeCount = Math.floor(remaining / 2);
+    const paidCount = remaining - freeCount;
+    document.getElementById("bookingCard").classList.remove("hidden");
+    document.getElementById("bookingTitle").textContent = "باقة " + PACKAGE_LABELS_AR[pkg] + " — " + remaining + " جلسات متبقية بعد الاستقبال";
+    document.getElementById("bookingSub").textContent = "منها " + freeCount + " مجانية و" + paidCount + " مدفوعة (مدفوعة مسبقًا). احجزها كسلسلة متكررة أسبوعية.";
+    document.getElementById("bookingBtn").href = CALCOM_COACHING_SESSION_URL;
+  }
 
   // DSM-IV — uses the standard DSM-IV clinical threshold: 6+ of 9 symptoms in
   // a domain is the recognized cutoff for children (5+ of 9 for ages 17+).
